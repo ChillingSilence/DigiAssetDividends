@@ -17,14 +17,18 @@ session_start();
 require_once dirname(__FILE__) . "/config.php";
 
 // No user logged in
-if (empty($_SESSION['user']['address']) || empty($_SESSION['user']['info']))
-{
-	header ('location:' . DIGIID_SERVER_URL);
-	exit;
-}
+if (empty($_SESSION['user']['address'])
+  || empty($_SESSION['user']['info'])) {
+    header ('location:' . DIGIID_SERVER_URL);
+    exit;
+  }
 
 $address = $_SESSION['user']['address'];
 $user_info = $_SESSION['user']['info'];
+$text = [
+  'next' => 'Next step',
+  'prev' => 'Previous step',
+];
 
 ?>
 <!DOCTYPE html>
@@ -64,9 +68,9 @@ $user_info = $_SESSION['user']['info'];
   <div class="row">
 
 
-    <div class="col-lg-6 offset-lg-3">
-      <h1 class="text-center mt-4 text-white">DigiAsset Dividends</h1>
-      <p class="text-center mb-2 text-white">Payment from <?= $user_info['fio'] ?></p>
+    <div class="col-12 col-lg-6 offset-lg-3">
+      <h1 class="text-center mt-4 text-white shadow">DigiAsset Dividends</h1>
+      <p class="text-center mb-2 text-white shadow">Payment from <?= $user_info['fio'] ?></p>
 
       <!-- At the bottom -->
       <div class="nav">
@@ -77,35 +81,40 @@ $user_info = $_SESSION['user']['info'];
       <form id="msform">
         <!-- Progressbar -->
         <ul id="progressbar">
-          <li class="active">Asset ID</li>
-          <li>Details</li>
-          <li>Deposit</li>
-          <li>Result</li>
+          <li class="active"><span class="shadow">Asset ID</span></li>
+          <li><span class="shadow">Confirmation</span></li>
+          <li><span class="shadow">Deposit</span></li>
+          <li><span class="shadow">Result</span></li>
         </ul>
         <!-- fieldsets -->
         <fieldset>
-          <h2 class="fs-title">Specify DigiAsset ID</h2>
-          <h3 class="fs-subtitle">to find asset holders</h3>
-          <input type="text" name="asset-id" placeholder="Asset ID" value="Ua5zQGwBVVWRRSeKxWbAPbFnxYsEBFMQByTXLP" 
-            onchange="javascript: check_field(this)" onkeyup="javascript: check_field(this)" />
-          <input type="button" name="next" class="next action-button" disabled="disabled" value="Next" />
+          <h2 class="fs-title">DigiAsset ID</h2>
+          <h3 class="fs-subtitle">Specify to find holders</h3>
+          <input type="text" name="asset-id" class="address" placeholder="Asset ID" 
+            value="Ua5zQGwBVVWRRSeKxWbAPbFnxYsEBFMQByTXLP" 
+            onchange="javascript: check_field(this)" 
+            onkeyup="javascript: check_field(this)" />
+          <input type="button" name="next" class="next action-button" disabled="disabled" value="<?= $text['next'] ?>" />
         </fieldset>
         <fieldset>
-          <h2 class="fs-title">Details</h2>
-          <h3 class="fs-subtitle">of founded results</h3>
+          <h2 class="fs-title">Confirmation</h2>
+          <h3 class="fs-subtitle">Details for: <span name="asset-id-short" class="address"></span></h3>
           <div name="details"></div>
-          <input type="button" name="previous" class="previous action-button-previous" value="Previous"/>
-          <input type="button" name="next" class="next action-button" value="Next" />
+          <input type="button" name="previous" class="previous action-button-previous" value="<?= $text['prev'] ?>"/>
+          <input type="button" name="next" class="next action-button" value="<?= $text['next'] ?>" />
         </fieldset>
         <fieldset>
           <h2 class="fs-title">Deposit</h2>
           
-          <input type="number" name="amount" class="w-50" value="10000" placeholder="Amount DGBs to distribute" />
-          <p>Please send 10050 DGBs to this address:</p>         
-          <div class="mb-3"><img width="200px" src="https://www.mobilefish.com/images/services/qrcode_example_1.png" /></div>
+          <input type="number" name="amount" class="w-25 address mr-1" value=""
+            placeholder="Amount DGBs to distribute"
+            onchange="javascript: amount_changed(this)" /> DGBs
 
-          <input type="button" name="previous" class="previous action-button-previous" value="Previous"/>
-          <input type="button" name="next" class="next action-button" value="Next" />
+          <p>Send <span id="amount"></span> DGBs to this address:</p>
+          <div class="mb-3"><img width="160px" src="https://www.mobilefish.com/images/services/qrcode_example_1.png" /></div>
+
+          <input type="button" name="previous" class="previous action-button-previous" value="<?= $text['prev'] ?>"/>
+          <input type="button" name="next" class="next action-button" value="<?= $text['next'] ?>" />
         </fieldset>
         <fieldset>
           <h2 class="fs-title">Result</h2>
