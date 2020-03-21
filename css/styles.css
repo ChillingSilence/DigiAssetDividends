@@ -1,0 +1,300 @@
+/* Basic reset */
+* {
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    height: 100%;
+    background: url("../images/Digibyte.jpg") black;
+    min-width: 340px;
+    background-position: top;
+    background-size: cover;
+}
+
+@media (max-width: 768px) {
+    .container {
+        width: 100% !important;
+        max-width: none !important;
+    }
+}
+
+body {
+    background: transparent;
+}
+
+.monospace {
+    font-family: monospace;
+}
+
+html.loading {
+    background: #e4eff2;
+}
+#loading {
+    position: absolute;	/* Абсолютное позиционирование */
+    width: 500px; /* Ширина слоя в пикселах */
+    height: 500px; /* Высота слоя в пикселах */
+    left: 50%; /* Положение слоя от левого края */
+    top: 50%; /* Положение слоя от верхнего края */
+    margin-left: -250px; /* Отступ слева, включает padding и border */
+    margin-top: -250px;	/* Отступ сверху */
+    overflow: auto; /* Добавление полосы прокрутки */ 
+}
+
+
+/* Headers */
+header {
+    padding: 40px 0;
+}
+header h1 {
+    text-align: center;
+    font-family: sans-serif;
+    font-size: 2.2rem;
+    color: white;
+}
+
+
+.fs-title {
+    font-size: 22px;
+    text-transform: uppercase;
+    color: #2C3E50;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.fs-subtitle {
+    font-weight: normal;
+    font-size: 15px;
+    color: #666;
+    margin-bottom: 20px;
+}
+
+
+
+/* Progressbar */
+#progressbar {
+    margin-bottom: 30px;
+    overflow: hidden;
+    counter-reset: step;
+}
+
+#progressbar li {
+    list-style-type: none;
+    color: gainsboro;
+    text-transform: uppercase;
+    font-size: 11px;
+    width: 25%;
+    float: left;
+    position: relative;
+    letter-spacing: 1px;
+}
+
+#progressbar li:before {
+    content: counter(step);
+    counter-increment: step;
+    width: 24px;
+    height: 24px;
+    line-height: 26px;
+    display: block;
+    font-size: 12px;
+    color: #333;
+    background: white;
+    border-radius: 25px;
+    margin: 0 auto 5px auto;
+    font-weight: bold;
+    margin-top: 2px;
+    padding-left: 2px;
+    box-shadow: 0 0 2px 1px black;
+}
+#progressbar li * {
+    text-shadow: 0px 0px 2px black, 1px 0px 2px black, 0px 1px 2px black, 1px 1px 2px black;
+}
+#progressbar li:after {
+    content: '';
+    width: 100%;
+    height: 3px;
+    background: white;
+    position: absolute;
+    left: -50%;
+    top: 12px;
+    z-index: -1; /*put it behind the numbers*/
+    box-shadow: 0 0 10px 1px black;
+}
+#progressbar li:first-child:after {
+    content: none;
+}
+#progressbar li.active:before, #progressbar li.active:after {
+    background: steelblue;
+    color: white;
+}
+#progressbar li.active {
+    color: white;
+}
+
+
+
+/* Form */
+form {
+    text-align: center;
+    position: relative;
+    margin-top: 30px;
+    margin-bottom: 60px;
+}
+
+form fieldset {
+    background: white;
+    border: 0 none;
+    border-radius: 0px;
+    box-shadow: 0 0 15px 1px black;
+    border-radius: 10px;
+    padding: 20px 30px 10px;
+    box-sizing: border-box;
+    width: 80%;
+    margin: 0 10%;
+    position: relative;
+}
+
+form input, form textarea {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    width: 100%;
+    box-sizing: border-box;
+    color: #2C3E50;
+    font-size: 15px;
+}
+
+form input:focus, form textarea:focus {
+    -moz-box-shadow: none !important;
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+    border: 1px solid steelblue;
+    outline-width: 0;
+    transition: All 0.5s ease-in;
+    -webkit-transition: All 0.5s ease-in;
+    -moz-transition: All 0.5s ease-in;
+    -o-transition: All 0.5s ease-in;
+}
+
+form .action-button {
+    width: auto;
+    display: inline-block;
+    background: steelblue;
+    font-weight: bold;
+    color: white;
+    border: 0 none;
+    border-radius: 25px;
+    cursor: pointer;
+    padding: 10px 15px;
+    margin: 10px 5px;
+}
+form .action-button:disabled {
+    background: #DDD;
+    cursor: not-allowed;
+}
+
+form .action-button:hover, form .action-button:focus {
+    box-shadow: 0 0 0 2px white, 0 0 0 3px steelblue;
+}
+form .disabled-button:hover, form .disabled-button:focus {
+    box-shadow: none;
+}
+
+form .action-button-previous {
+    width: auto;
+    display: inline-block;
+    background: steelblue;
+    font-weight: bold;
+    color: white;
+    border: 0 none;
+    border-radius: 25px;
+    cursor: pointer;
+    padding: 10px 15px;
+    margin: 10px 5px;
+}
+
+form .action-button-previous:hover, form .action-button-previous:focus {
+    box-shadow: 0 0 0 2px white, 0 0 0 3px #C5C5F1;
+}
+
+
+/* Details */
+div[name=details] {
+    margin-bottom: 10px
+}
+.error-info, .success-info {
+    padding: 10px;
+    font-family: monospace;
+    display: block;
+    border-radius: 10px
+}
+.error-info {
+    background: #FFAAAA;
+}
+
+.success-info {
+    background: #AAFFAA;
+}
+
+
+/* Animation */
+.animate-show-hide.ng-hide {
+    opacity: 0;
+}
+
+.animate-show-hide.ng-hide-add,
+.animate-show-hide.ng-hide-remove {
+    transition: all linear 0.3s;
+}
+.animate-show-hide.ng-hide-add {
+    display:none!important;
+}
+
+.funky-show-hide.ng-hide-add {
+    /* display:none!important;*/
+    transform: rotateZ(0);
+    transform-origin: right;
+    transition: all 0.3s ease-in-out;
+}
+  
+.funky-show-hide.ng-hide-add.ng-hide-add-active {
+    transform: rotateZ(-135deg);
+}
+  
+.funky-show-hide.ng-hide-remove {
+    transform: rotateY(90deg);
+    transform-origin: left;
+    transition: all 0.5s ease;
+}
+  
+.funky-show-hide.ng-hide-remove.ng-hide-remove-active {
+    transform: rotateY(0);
+}
+
+.ng-hide:not(.ng-hide-animate) {
+    /* These are just alternative ways of hiding an element */
+    display: block!important;
+    position: absolute;
+    top: -9999px;
+    left: -9999px;
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    display: block;
+    margin-top: 1.5rem;
+    position: fixed;
+    bottom: 10px;
+    width: 100%;
+    left: 0;
+}
+footer a {
+    color: gainsboro;
+    font-size: 14px;
+    padding: 5px;
+    box-shadow: 0px 0px 15px black;
+    background: #000000CC;
+}

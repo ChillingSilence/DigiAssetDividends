@@ -1,0 +1,125 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html ng-app="dadApp" class="loading">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Digibyte Assets Dividends">
+    <meta name="author" content="Chilling Silence & Cept">
+    <title>DigiAsset Dividends</title>
+    <!--base href="https://www.digiassetdividends.com" /-->
+    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+
+    <script src="js/angular.min.js"></script>
+    <script src="js/angular-animate.min.js"></script>
+
+    <script ng-if="tagGoogleAnalytics" async src="https://www.googletagmanager.com/gtag/js?id=<?= DIGIID_GOOGLE_ANALYTICS_TAG ?>"></script>
+    <script ng-if="tagGoogleAnalytics">window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date()); gtag('config', '{{ tagGoogleAnalytics }}');</script>
+</head>
+<body>
+<div id="loading">
+
+    <img src="images/giphy.gif" />
+
+</div>
+<div ng-controller="dadController" ng-init="init()" ng-cloak>
+
+
+<!-- Header -->
+<header>
+    <h1>DigiAsset Dividends</h1>
+</header>
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-12 col-lg-6 offset-lg-3">
+
+            <!-- Form -->
+            <form>
+
+                <!-- Progressbar -->
+                <ul id="progressbar">
+                    <li ng-class="page >= 1 ? 'active' : ''">Asset ID</li>
+                    <li ng-class="page >= 2 ? 'active' : ''">Confirmation</li>
+                    <li ng-class="page >= 3 ? 'active' : ''">Deposit</li>
+                    <li ng-class="page >= 4 ? 'active' : ''">Result</li>
+                </ul>
+
+                <!-- First step -->
+                <fieldset ng-show="page == 1" class="animate-show-hide">
+                    <h2 class="fs-title">Asset ID</h2>
+                    <h3 class="fs-subtitle mb-0">Specify address to find holders</h3>
+
+                    <input type="text" name="asset-id" ng-model="address" class="monospace text-center" placeholder="Asset ID" />
+
+                    <button class="next action-button" ng-disabled="!isCorrectAddress()" ng-click="goNextPage()">
+                        {{ labelNextBtn }}</button>
+                </fieldset>
+
+                <!-- Second step -->
+                <fieldset ng-show="page == 2" class="animate-show-hide">
+                    <h2 class="fs-title">Confirmation</h2>
+                    <h3 class="fs-subtitle">Details for {{ address }}:</h3>
+
+                    <img ng-hide="hasDetails()" src="images/giphy.gif" class="w-100" style="border-radius: 15px" />
+                    <div ng-hide="!hasDetails()"><div ng-bind-html="details | unsafe"></div></div>
+
+                    <button class="previous action-button-previous" ng-click="goPrevPage()">
+                        {{ labelPrevBtn }}</button>
+                    <button class="next action-button" ng-click="goNextPage()">
+                        {{ labelNextBtn }}</button>
+                </fieldset>
+
+                <!-- Third step -->
+                <fieldset ng-show="page == 3" class="animate-show-hide">
+                    <h2 class="fs-title">Deposit</h2>
+                    
+                    <input type="number" name="amount" class="w-25 address mr-1" value=""
+                        placeholder="Amount DGBs to distribute"
+                        onchange="javascript: amount_changed(this)" /> DGBs
+
+                    <p>Send <span id="amount"></span> DGBs to this address:</p>
+                    <div class="mb-3"><img width="160px" id="deposit_qr" src="https://www.mobilefish.com/images/services/qrcode_example_1.png" /></div>
+
+                    <button class="previous action-button-previous" ng-click="goPrevPage()">
+                        {{ labelPrevBtn }}</button>
+                    <button class="next action-button" ng-click="goNextPage()">
+                        {{ labelNextBtn }}</button>
+                </fieldset>
+
+                <!-- Fourth step -->
+                <fieldset ng-show="page == 4" class="funky-show-hide">
+                    <h2 class="fs-title">Result</h2>
+                    <h3 class="fs-subtitle">Some congratulations here</h3>
+
+                    <button class="next action-button" ng-click="goStartPage()">
+                        Repeat again?</button>
+                </fieldset>
+
+            </form>
+
+        </div>
+    </div>
+
+</div>
+<!-- /.MultiStep Form -->
+
+
+<!-- At the bottom -->
+<footer>
+    <a href="logout.php">Cancel & Logout</a>
+</footer>
+
+
+</div>
+  
+<script src="js/jquery-3.4.1.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/dadApp.js"></script>
+
+</body>
+</html>
