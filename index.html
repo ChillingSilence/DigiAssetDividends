@@ -15,9 +15,9 @@
     <script src="js/angular.min.js"></script>
     <script src="js/angular-animate.min.js"></script>
 
-    <script ng-if="tagGoogleAnalytics" async src="https://www.googletagmanager.com/gtag/js?id=<?= DIGIID_GOOGLE_ANALYTICS_TAG ?>"></script>
-    <script ng-if="tagGoogleAnalytics">window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date()); gtag('config', '{{ tagGoogleAnalytics }}');</script>
+    <script ng-if="TAG_GOOGLE_ANALYTICS" async src="https://www.googletagmanager.com/gtag/js?id={{ TAG_GOOGLE_ANALYTICS }}"></script>
+    <script ng-if="TAG_GOOGLE_ANALYTICS">window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date()); gtag('config', '{{ TAG_GOOGLE_ANALYTICS }}');</script>
 </head>
 <body>
 <div id="loading">
@@ -30,7 +30,8 @@
 
 <!-- Header -->
 <header>
-    <h1>DigiAsset Dividends</h1>
+    <h1 class="shadow">DigiAsset Dividends</h1>
+    {{ session }}
 </header>
 
 
@@ -50,45 +51,56 @@
                 </ul>
 
                 <!-- First step -->
-                <fieldset ng-show="page == 1" class="animate-show-hide">
-                    <h2 class="fs-title">Asset ID</h2>
-                    <h3 class="fs-subtitle mb-0">Specify address to find holders</h3>
+                <fieldset ng-show="page == 1">
+                    <h2 class="fs-title">Specify address to find holders</h2>
 
                     <input type="text" name="asset-id" ng-model="address" class="monospace text-center" placeholder="Asset ID" />
 
-                    <button class="next action-button" ng-disabled="!isCorrectAddress()" ng-click="goNextPage()">
-                        {{ labelNextBtn }}</button>
+                    <button class="action-button" ng-disabled="!isValidAddr()" ng-click="goNextPage()">
+                        {{ getLabel('NextBtn') }}</button>
                 </fieldset>
 
                 <!-- Second step -->
                 <fieldset ng-show="page == 2" class="animate-show-hide">
-                    <h2 class="fs-title">Confirmation</h2>
-                    <h3 class="fs-subtitle">Details for {{ address }}:</h3>
+                    <h2 class="fs-title">Information for</h2>
+                    <h3 class="fs-subtitle overflow-auto" title="{{ address }}">{{ address }}</h3>
 
-                    <img ng-hide="hasDetails()" src="images/giphy.gif" class="w-100" style="border-radius: 15px" />
-                    <div ng-hide="!hasDetails()"><div ng-bind-html="details | unsafe"></div></div>
+                    <div ng-hide="hasConfirmDetails()">
+                        <img src="images/giphy.gif" class="w-50 d-inline align-center rounded" />
+                    </div>
+                    <div ng-show="hasConfirmDetails()">
+                        <div ng-bind-html="confirmDetails | unsafe"></div>
+                    </div>
 
-                    <button class="previous action-button-previous" ng-click="goPrevPage()">
-                        {{ labelPrevBtn }}</button>
-                    <button class="next action-button" ng-click="goNextPage()">
-                        {{ labelNextBtn }}</button>
+                    <button class="action-button-previous" ng-click="goPrevPage()">
+                        {{ getLabel('PrevBtn') }}
+                    </button>
+                    <button class="action-button" ng-disabled="!nextEnabled" ng-click="goNextPage()">
+                        {{ getLabel('NextBtn') }}
+                    </button>
                 </fieldset>
 
                 <!-- Third step -->
                 <fieldset ng-show="page == 3" class="animate-show-hide">
-                    <h2 class="fs-title">Deposit</h2>
-                    
-                    <input type="number" name="amount" class="w-25 address mr-1" value=""
-                        placeholder="Amount DGBs to distribute"
-                        onchange="javascript: amount_changed(this)" /> DGBs
+                    <h2 class="fs-title">Send DGBs to this address</h2>
 
-                    <p>Send <span id="amount"></span> DGBs to this address:</p>
-                    <div class="mb-3"><img width="160px" id="deposit_qr" src="https://www.mobilefish.com/images/services/qrcode_example_1.png" /></div>
+                    <div class="mb-3">
+                        <img width="240px" id="deposit_qr" src="https://www.mobilefish.com/images/services/qrcode_example_1.png" />
+                    </div>
 
-                    <button class="previous action-button-previous" ng-click="goPrevPage()">
-                        {{ labelPrevBtn }}</button>
-                    <button class="next action-button" ng-click="goNextPage()">
-                        {{ labelNextBtn }}</button>
+                    <p>Balance: {{ balance }}</p>
+                    <p>System fee: {{ getFee() }}</p>
+
+                    <div>
+                        <input type="number" name="amount" class="w-25 address mr-1" value=""
+                            placeholder="Amount DGBs to distribute"
+                            onchange="javascript: amount_changed(this)" /> DGBs
+                    </div>
+
+                    <button class="action-button-previous" ng-click="goPrevPage()">
+                        {{ getLabel('PrevBtn') }}</button>
+                    <button class="action-button" ng-disabled="!nextEnabled" ng-click="goNextPage()">
+                        {{ getLabel('NextBtn') }}</button>
                 </fieldset>
 
                 <!-- Fourth step -->
@@ -96,7 +108,7 @@
                     <h2 class="fs-title">Result</h2>
                     <h3 class="fs-subtitle">Some congratulations here</h3>
 
-                    <button class="next action-button" ng-click="goStartPage()">
+                    <button class="action-button" ng-click="goStartPage()">
                         Repeat again?</button>
                 </fieldset>
 
@@ -110,15 +122,16 @@
 
 
 <!-- At the bottom -->
-<footer>
+<!--<footer>
     <a href="logout.php">Cancel & Logout</a>
-</footer>
+</footer>-->
 
 
 </div>
   
 <script src="js/jquery-3.4.1.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
+<script src="js/digiQR.min.js"></script>
 <script src="js/dadApp.js"></script>
 
 </body>

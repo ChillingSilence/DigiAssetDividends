@@ -1,3 +1,20 @@
+@font-face {
+	font-family: 'Roboto';
+	src: url('../fonts/Roboto-Light.ttf');
+	font-weight: normal;
+}
+@font-face {
+	font-family: 'Roboto';
+	src: url('../fonts/Roboto-Regular.ttf');
+	font-weight: bold;
+}
+@font-face {
+	font-family: 'Roboto';
+	src: url('../fonts/Roboto-Italic.ttf');
+	font-style: italic;
+}
+
+
 /* Basic reset */
 * {
     margin: 0;
@@ -10,6 +27,8 @@ html {
     min-width: 340px;
     background-position: top;
     background-size: cover;
+    font-family: 'Roboto', sans-serif;
+    cursor: default;
 }
 
 @media (max-width: 768px) {
@@ -31,14 +50,14 @@ html.loading {
     background: #e4eff2;
 }
 #loading {
-    position: absolute;	/* Абсолютное позиционирование */
-    width: 500px; /* Ширина слоя в пикселах */
-    height: 500px; /* Высота слоя в пикселах */
-    left: 50%; /* Положение слоя от левого края */
-    top: 50%; /* Положение слоя от верхнего края */
-    margin-left: -250px; /* Отступ слева, включает padding и border */
-    margin-top: -250px;	/* Отступ сверху */
-    overflow: auto; /* Добавление полосы прокрутки */ 
+    position: absolute;
+    width: 500px;
+    height: 500px;
+    left: 50%;
+    top: 50%;
+    margin-left: -250px;
+    margin-top: -250px;
+    overflow: auto;
 }
 
 
@@ -48,8 +67,8 @@ header {
 }
 header h1 {
     text-align: center;
-    font-family: sans-serif;
-    font-size: 2.2rem;
+    font-size: 2.5rem;
+    font-weight: bold;
     color: white;
 }
 
@@ -63,7 +82,7 @@ header h1 {
 }
 
 .fs-subtitle {
-    font-weight: normal;
+    font-weight: bold;
     font-size: 15px;
     color: #666;
     margin-bottom: 20px;
@@ -73,20 +92,26 @@ header h1 {
 
 /* Progressbar */
 #progressbar {
-    margin-bottom: 30px;
+    margin-bottom: 60px;
     overflow: hidden;
     counter-reset: step;
 }
 
 #progressbar li {
     list-style-type: none;
-    color: gainsboro;
     text-transform: uppercase;
-    font-size: 11px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    font-style: italic;
     width: 25%;
     float: left;
     position: relative;
     letter-spacing: 1px;
+    color: white;
+    text-shadow: 0 0 10px black;
+}
+#progressbar li, .shadow {
+    text-shadow: 0 0 8px black, 0 0 12px black, 0 0 6px black
 }
 
 #progressbar li:before {
@@ -94,20 +119,24 @@ header h1 {
     counter-increment: step;
     width: 24px;
     height: 24px;
-    line-height: 26px;
     display: block;
-    font-size: 12px;
+    font-size: 16px;
     color: #333;
     background: white;
-    border-radius: 25px;
-    margin: 0 auto 5px auto;
+    border-radius: 6px;
+    margin: 0 auto 2px auto;
     font-weight: bold;
-    margin-top: 2px;
-    padding-left: 2px;
     box-shadow: 0 0 2px 1px black;
+    text-shadow: none;
 }
 #progressbar li * {
-    text-shadow: 0px 0px 2px black, 1px 0px 2px black, 0px 1px 2px black, 1px 1px 2px black;
+    text-shadow:
+        0 0 1px #000,
+        0 0 2px #000,
+        0 0 3px #000,
+        0 0 4px #000,
+        0 0 5px #000,
+        0 0 6px #000
 }
 #progressbar li:after {
     content: '';
@@ -128,7 +157,7 @@ header h1 {
     color: white;
 }
 #progressbar li.active {
-    color: white;
+    color: steelblue;
 }
 
 
@@ -147,10 +176,10 @@ form fieldset {
     border-radius: 0px;
     box-shadow: 0 0 15px 1px black;
     border-radius: 10px;
-    padding: 20px 30px 10px;
+    padding: 15px 15px 10px; /* 20px 30px 10px;*/
     box-sizing: border-box;
-    width: 80%;
-    margin: 0 10%;
+    width: 90%;
+    margin: 0 5%;
     position: relative;
 }
 
@@ -187,7 +216,7 @@ form .action-button {
     border: 0 none;
     border-radius: 25px;
     cursor: pointer;
-    padding: 10px 15px;
+    padding: 10px 25px;
     margin: 10px 5px;
 }
 form .action-button:disabled {
@@ -221,8 +250,10 @@ form .action-button-previous:hover, form .action-button-previous:focus {
 
 
 /* Details */
-div[name=details] {
-    margin-bottom: 10px
+.address-info {
+    margin-bottom: 10px;
+    text-align: center;
+    cursor: default;
 }
 .error-info, .success-info {
     padding: 10px;
@@ -281,8 +312,10 @@ div[name=details] {
     left: -9999px;
 }
 
+
+
 /* Footer */
-footer {
+/* footer {
     text-align: center;
     display: block;
     margin-top: 1.5rem;
@@ -293,8 +326,12 @@ footer {
 }
 footer a {
     color: gainsboro;
-    font-size: 14px;
-    padding: 5px;
-    box-shadow: 0px 0px 15px black;
-    background: #000000CC;
+    font-size: 1rem;
+    padding: 5px 15px;
+    box-shadow: 0px 0px 30px black;
+    border-radius: 10px;
+    background: #00000099;
 }
+footer a:hover {
+    color: white;
+}*/
