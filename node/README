@@ -1,0 +1,13 @@
+
+Installation requirements
+=============================
+
+npm i digiassets-sdk
+npm i dnode
+
+
+Run node
+=============================
+./start-node
+
+
