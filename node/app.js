@@ -5,6 +5,8 @@ const { DGBfunds }  = require('./digibyte-funds')
 const digibytejs    = require('./digibyte')
 const DigiAssets    = require('digiassets-sdk')
 const dnode         = require('dnode')
+
+
 const usePort       = 11111
 
 
@@ -17,7 +19,8 @@ class App {
         this.actions = {
             'generate-address'  : this.actionGenerateAddress,
             'send-funds'        : this.actionSendFunds,
-            'asset-info'        : this.getAssetInfo,
+            'asset-info'        : this.actionAssetInfo,
+            'test-it'           : this.actionTest,
         }
 
         this.DGB = new DGBfunds()
@@ -31,38 +34,42 @@ class App {
     }
 
 
-    run(jsonString, callback)
+    controller(jsonString, callback)
     {
-        var json    = JSON.parse(jsonString)
+        let json    = JSON.parse(jsonString)
+
         this.cmd    = json.command
         this.param  = json.param
-
         if (this.cmd in this.actions) {
             this.log('Run command: ' + this.cmd + " (Param: " + this.param + ")")
             return (this.actions[this.cmd].bind(this))(callback)
         }
-
         this.log('Unknown command ' + this.cmd)
+
+        callback ('error', 'Unknown command')
         return false
     }
 
 
-    actionGenerateAddress()
+    actionGenerateAddress(callback)
     {
         let newAddressInfo = this.DGB.getNewAddress()
         this.log('Generated address', newAddressInfo)
 
-        return newAddressInfo
+        callback('ok', newAddressInfo)
     }
 
 
-    send(fromPriv, fromAddr, summ, deals, callback)
+    actionSendFunds(callback)
     {
-        return this.DGB.createAndSendTransaction(fromPriv, fromAddr, summ, deals, callback)
+        // this.DGB.createAndSendTransaction(fromPriv, fromAddr, summ, deals, callback)
+        this.log('Send funds', this.param)
+
+        callback('error', 'will be implemented later')
     }
 
 
-    assetInfo(callback)
+    actionAssetInfo(callback)
     {
         let address = this.param
         if (!address) {
@@ -81,6 +88,12 @@ class App {
     }
 
 
+    actionTest(callback)
+    {
+        callback('ok', 'test')
+    }
+
+
     log(info1, info2=null)
     {
         console.log('----------------------------')
@@ -91,25 +104,10 @@ class App {
             console.log(info1)
         }
     }
-
-
-    noCallback(_,__)
-    {
-        return true
-    }
-
-
-    checkIt(callback)
-    {
-        callback('ok', '')
-    }
-
-
 }
 
 
 // Start service on port
-var app = new App();
-var params = { 'run': (json, cb) => app.run(json, cb) }
-
-dnode(params).listen(usePort);
+var app = new App()
+var node = dnode({ 'run': (json, cb) => app.controller(json, cb) })
+node.listen(usePort)
