@@ -1,0 +1,4 @@
+#!/bin/bash
+echo Starting: Node.js API
+
+node --abort-on-uncaught-exception ./app.js dad

@@ -1,0 +1,9 @@
+#!/bin/bash
+
+pid=`ps -aux | grep node | grep dad | awk '{print $2}'`
+if [[ $pid != '' ]]; then
+    echo Stopping: $pid
+    kill $pid
+else
+    echo "DigiAssetsDividends not running"
+fi

@@ -1,6 +1,4 @@
 #!/bin/bash
 echo Starting: Node.js API
 
-# cd /var/www/digibyte-js
-node --abort-on-uncaught-exception ./app.js 
-# >> app.log &
+node --abort-on-uncaught-exception ./app.js dad >> app.log &
