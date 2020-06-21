@@ -4,7 +4,6 @@
 const { DGBfunds }  = require('./digibyte-funds')
 const dnode         = require('dnode')
 const usePort       = 8080
-const adminAddress  = 'DEbc2Su1jqVavbjAaqP1wXFo15fHY7dbuJ'
 
 
 class App {
