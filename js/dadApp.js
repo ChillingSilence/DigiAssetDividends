@@ -24,7 +24,7 @@ $app.controller('dadController', function($scope, $http, $window, $document) {
 
     $scope.assetAddress         = DEFAULT_ASSET_ADDR
     $scope.page                 = 1
-    $scope.balance              = 1
+    $scope.balance              = 0
     $scope.refreshEnabled       = false
     $scope.nextEnabled          = false
     $scope.confirmDetails       = ''
@@ -95,6 +95,7 @@ $app.controller('dadController', function($scope, $http, $window, $document) {
                 + '<p>Aggregation policy: ' + assetInfo.aggregationPolicy   + "</p>"
                 + '<p>Locked: '             + assetInfo.lockStatus          + "</p>"
                 + '</div>'
+            $scope.balance = 0
             $scope.$apply()
         }
 
@@ -154,11 +155,13 @@ $app.controller('dadController', function($scope, $http, $window, $document) {
 			url     : BALANCE_URL.replace('%s', userDepoAddress),
 			dataType: 'json',
 			success : (response) => {
+                $scope.balance = response.balance / SATS_IN_DGB
+
                 if (response.balance) {
-                    $scope.balance = response.balance / SATS_IN_DGB
                     $scope.nextEnabled = $scope.balance > 0
-                    $scope.$apply()
                 }
+
+                $scope.$apply()
 
                 if (callback) {
                     callback()
@@ -175,7 +178,7 @@ $app.controller('dadController', function($scope, $http, $window, $document) {
 
         let onPaymentSuccess = (info) => {
             $scope.resultDetails = '<div class="success-info">' + info + '</div>'
-            $scope.refreshEnabled = true
+            $scope.refreshEnabled = false
             $scope.$apply()
         }
         let onError = onPaymentError = () => {

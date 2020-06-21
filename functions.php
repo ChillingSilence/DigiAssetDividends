@@ -1,4 +1,5 @@
 <?php
+
 defined('RUNNING_FROM_APP') || die('Indirect run is not allowed');
 
 /**
@@ -11,8 +12,8 @@ defined('RUNNING_FROM_APP') || die('Indirect run is not allowed');
 function doNodeJsRequest($port, $paramsArray, $callback)
 {
     require_once 'vendor/autoload.php';
-    $loop = new React\EventLoop\StreamSelectLoop();
-    $dnode = new DNode\DNode($loop);
+    $loop   = new React\EventLoop\StreamSelectLoop();
+    $dnode  = new DNode\DNode($loop);
 
     try {
         $dnode->connect($port, function($remote, $connection) use($paramsArray, $callback) {
@@ -81,7 +82,7 @@ function sendFundsFromUserWallet($receiversWithProcents, $overallSumm, $callback
         ];
     }
 
-    if (FEE_PROCENTS) {
+    if (TX_FEE_SAT) {
         $receivers[] = [
             'addr'  => ADMIN_ADDRESS,
             'value' => $overallSumm - $overallSummWithoutFee - TX_FEE_SAT/SATS_IN_DGB,

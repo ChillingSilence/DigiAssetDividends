@@ -54,6 +54,9 @@ class App {
             return callback('error', 'error in parameters')
         }
 
+        console.log('HEY')
+        console.log(params)
+
         this.DGB.send(
             params.wallet['privateKey'],
             params.wallet['address'],

@@ -9,9 +9,7 @@ if ($_POST) {
         default:
             require 'action/not-found.php';
     }
-}
-
-// Show mainpage after wallet was generated
-elseif ($userDepoWallet ?? false) {
+} elseif ($userDepoWallet ?? false) {
+    // Show mainpage after wallet was generated
     require 'view/index.php';
 }

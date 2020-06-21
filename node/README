@@ -8,7 +8,11 @@ npm i dnode
 
 Run node
 =============================
-./start-node
 
-or 
-./start-node-interactive
+`./start-node`
+to run as service
+
+or
+
+`./start-node-interactive`
+to run for debug (console log, CTRL-C will break it)

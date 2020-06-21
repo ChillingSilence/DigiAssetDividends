@@ -1,7 +1,9 @@
 Install Node.js
 ================================================
 
+Get from:
 https://nodejs.org/en/download/package-manager/
 
+To install dependencies:
+composer install
 
-composer require dnode/dnode
