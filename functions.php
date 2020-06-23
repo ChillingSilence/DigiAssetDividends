@@ -28,7 +28,7 @@ function doNodeJsRequest($port, $paramsArray, $callback)
         $loop->run();
     }
     catch (RuntimeException $ex) {
-        print_r($ex);
+        print_r($ex->getMessage());
         return false;
     }
 
