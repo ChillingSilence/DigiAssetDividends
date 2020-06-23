@@ -140,7 +140,7 @@
 <script src="js/jquery-3.4.1.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
 <script src="js/digiQR.min.js"></script>
-<script>var userDepoAddress = '<?= $userDepoWallet['address'] ?>'; console.log(userDepoAddress);</script>
+<script>var userDepoAddress = '<?= $userDepoWallet->address ?>'; console.log(userDepoAddress);</script>
 <script src="js/dadApp.js"></script>
 
 </body>
