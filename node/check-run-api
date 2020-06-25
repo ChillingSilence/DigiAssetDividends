@@ -1,0 +1,14 @@
+#!/bin/bash
+
+URL=127.0.0.1:60001
+WORKDIR=/var/www/DigiAssetDividends/node
+
+`curl --silent --output /dev/null "$URL"`
+if [ "$?" = "7" ]; then
+    echo "running dad..."
+    $WORKDIR/start-node
+    exit 1
+fi
+
+echo "dad - ok"
+exit 0

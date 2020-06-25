@@ -3,7 +3,7 @@
 
 const { DGBfunds }  = require('./digibyte-funds')
 const dnode         = require('dnode')
-const usePort       = 8080
+const usePort       = 60001
 
 
 class App {

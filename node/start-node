@@ -2,3 +2,4 @@
 echo Starting: Node.js API
 
 node --abort-on-uncaught-exception ./app.js dad >> app.log &
+sleep 2

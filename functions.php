@@ -102,6 +102,14 @@ function sendFundsFromUserWallet($receiversWithProcents, $overallSumm, $callback
     doNodeJsRequest(NODE_PORT, $params, $callback);
 }
 
+function testNode($callback)
+{
+    $params = [
+	'command' => 'test-connect',
+    ];
+    doNodeJsRequest(NODE_PORT, $params, $callback);
+}
+
 /**
  * @param array
  */
