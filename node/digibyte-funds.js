@@ -34,26 +34,6 @@ class DGBfunds {
             dustThreshold   : 546,
             feePerKb        : 10000,
         }
-
-        this.DIGIBYTE_p2wpkhInP2sh = {
-            baseNetwork     : "digibyte",
-            messagePrefix   : '\x19DigiByte Signed Message:\n',
-            bech32          : 'dgb',
-            bip32           : { public: 0x049d7cb2, private: 0x049d7878 },
-            pubKeyHash      : 0x1e,
-            scriptHash      : 0x3f,
-            wif             : 0x80
-        }
-
-        this.DIGIBYTE_p2wpkh = {
-            baseNetwork     : "digibyte",
-            messagePrefix   : 'x19DigiByte Signed Message:\n',
-            bech32          : 'dgb',
-            bip32           : { public: 0x04b24746, private: 0x04b2430c },
-            pubKeyHash      : 0x1e,
-            scriptHash      : 0x3f,
-            wif             : 0x80
-        }
     }
 
 
@@ -84,10 +64,7 @@ class DGBfunds {
         var _this = this
 
         return new Promise((resolve, reject) => {
-console.log('sa', sourceAddress)
             this._getUnspentTransactionOutput(sourceAddress).then(utxos => {
-console.log('utxos', utxos)
-
                 if (utxos.length == 0) {
                     reject({
                         "result"    : "error",
@@ -99,27 +76,11 @@ console.log('utxos', utxos)
                 let changeAddress       = changePrivateKey.toAddress()
                 let transaction         = new DigiByte.Transaction()
                 let sourcePrivateKey    = DigiByte.PrivateKey.fromWIF(sourcePrivateKeyWIF)
-                let sourcePublicKey     = sourcePrivateKey
-// console.log(sourcePrivateKey)
-
-                var keyPair             = bitcoinjs.ECPair.fromWIF(sourcePrivateKeyWIF, _this.DIGIBYTE_NETWORK)
-// console.log('!KP')
-// console.log(keyPair)
-                // let pkhAddress          = bitcoinjs.payments.p2pkh({ pubkey: keyPair.publicKey, network: _this.DIGIBYTE_p2wpkh })
-                // let signAddress = pkhAddress; // sourcePrivateKey; //WIF; //new DigiByte.PrivateKey() // DigiByte.Script.buildPublicKeyHashOut(sourcePrivateKey.toAddress());
-                let signAddress         = sourcePrivateKeyWIF // keyPair.privateKey // new DigiByte.PrivateKey(sourcePrivateKeyWIF)
-
-// console.log('!PKH')
-// console.log(pkhAddress)
+                let signAddress         = sourcePrivateKeyWIF
                 let balanceLeft         = overallSumm
                 let error               = null
 
                 transaction.from(utxos)
-                /* for (let index = 0; index < utxos.length; index++) {
-                    transaction.from(utxos[index])
-console.log('from', utxos[index])
-                }*/
-                // transaction.from(utxos)
 
                 for (let index in operations) {
                     let line    = operations[index]
@@ -152,70 +113,42 @@ console.log('from', utxos[index])
                     let sendSumm = parseInt(summ * _this.SATS_IN_DGB)
                     for (let cnt = 1; cnt <= times; cnt ++) {
                         transaction.to(addr, sendSumm)
-// console.log('to', [addr, sendSumm])
+                        console.log('=>', addr, sendSumm)
                     }
                 }
 
-                console.log('bl:', balanceLeft)
-                console.log('?', _this.TX_FEE_SAT / _this.SATS_IN_DGB)
-                if (balanceLeft < _this.TX_FEE_SAT / _this.SATS_IN_DGB) {
-                    error = 'No satoshis left to send'
-                }
-
-                if (error) {
-                    cb('error', error)
-                    return reject(error)
-                }
-
                 transaction.change(changeAddress)
-
-                // TODO: Fix fatal error here: 
-                // (node:29343) [DEP0079] DeprecationWarning: Custom inspection function on Objects via .inspect() is deprecated
-                // (node:29343) UnhandledPromiseRejectionWarning: Invalid state: Can't retrieve PublicKeyHash from a non-PKH output
-                console.log('spk:', sourcePrivateKey)
-                console.log('spk2:', sourcePrivateKeyWIF)
-                // let signAddress = sourcePrivateKey // new DigiByte.PrivateKey(sourcePrivateKeyWIF) // sourcePrivateKey // new DigiByte.Script(sourcePrivateKey)
-                // signAddress = signAddress.getPublicKeyHash()
-
-// var address = sourcePrivateKey.toAddress(); // DigiByte.Address.fromString(sourcePrivateKeyWIF);
-// var script = DigiByte.Script.buildPublicKeyHashOut(address);
-
-                // DigiByte.Address(DigiByte.PublicKey.fromWIF(sourcePrivateKeyWIF), 'mainnet')
-                console.log('SI');
-                console.log(signAddress);
                 transaction.sign(signAddress, 0)
-                console.log('spkga:', signAddress)
 
-                console.log('we will send it')
                 _this._sendTransaction(transaction).then(
                     result => {
-                        console.log({
+                        let info = {
                             "source_private_key"    : sourcePrivateKey.toWIF(),
                             "source_address"        : sourceAddress,
                             "change_private_key"    : changePrivateKey.toWIF(),
                             "change_address"        : changeAddress,
                             "sent_amount"           : overallSumm
-                        });
+                        }
 
-                        resolve(Object.assign(result, {
-                            "source_private_key"    : sourcePrivateKey.toWIF(),
-                            "source_address"        : sourceAddress,
-                            "change_private_key"    : changePrivateKey.toWIF(),
-                            "change_address"        : changeAddress,
-                            "sent_amount"           : overallSumm
-                        }))
-
-                        cb('ok', 'sent')
+                        console.log('sent transaction', info);
+                        if (cb) {
+                            cb('ok', 'sent')
+                        }
+                        return resolve(Object.assign(result, info))
                     }, 
                     error => {
-                        cb('error', error)
-                        reject(error)
+                        if (cb) {
+                            cb('error', error)
+                        }
+                        return reject(error)
                     }
                 )
 
             }, error => {
-                cb('error', error)
-                reject(error)
+                if (cb) {
+                    cb('error', error)
+                }
+                return reject(error)
             })
         })
     }
@@ -234,12 +167,14 @@ console.log('from', utxos[index])
             let addressUtxosUrl = _this.EXPLORER_URL + "/api/addr/" + address + "/utxo"
             Request.get(addressUtxosUrl, (error, response, body) => {
                 if (error) {
-                    console.log('_guto')
-                    console.log(error)
+                    console.log('_guto', error)
+                    if (cb) {
+                        cb(error)
+                    }
                     return reject(error)
                 }
 
-                resolve(_this._answerToQuery(body, cb))
+                return resolve(_this._answerToQuery(body, cb))
             })
         })
     }
@@ -281,7 +216,7 @@ console.log('from', utxos[index])
      */
     _answerToQuery(body, callback=false, modificator=false)
     {
-        console.log('_atq', body)
+        console.log('_answer', body)
         let parsedBody = JSON.parse(body)
         if (modificator === 'first') {
             parsedBody = parsedBody[0]

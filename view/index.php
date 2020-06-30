@@ -74,7 +74,7 @@
                         <button ng-click="goPrevPage()" class="action-button">
                             {{ getLabel('PrevBtn') }}
                         </button>
-                        <button ng-click="refreshPage()" ng-disabled="!refreshEnabled" class="action-button">
+                        <button ng-click="refreshPage()" ng-show="refreshEnabled" class="action-button">
                             {{ getLabel('RefreshBtn') }}
                         </button>
                         <button ng-disabled="!nextEnabled" ng-click="goNextPage()" class="action-button">
@@ -102,10 +102,10 @@
                         <button ng-click="goPrevPage()" class="action-button">
                             {{ getLabel('PrevBtn') }}
                         </button>
-                        <button ng-click="refreshPage()" ng-disabled="!refreshEnabled" class="action-button">
+                        <button ng-click="refreshPage()" ng-show="refreshEnabled" class="action-button">
                             {{ getLabel('RefreshBtn') }}
                         </button>
-                        <button ng-disabled="!nextEnabled" ng-click="goNextPage()" class="action-button">
+                        <button ng-click="goNextPage()" ng-show="nextEnabled" class="action-button">
                             {{ getLabel('NextBtn') }}
                         </button>
                     </fieldset>
@@ -121,11 +121,11 @@
                             <div ng-bind-html="resultDetails | unsafe"></div>
                         </div>
 
-                        <button ng-click="refreshPage()" ng-disabled="!refreshEnabled" class="action-button">
+                        <button ng-click="refreshPage()" ng-show="refreshEnabled" class="action-button">
                             {{ getLabel('RefreshBtn') }}
                         </button>
-                        <button ng-click="goStartPage()" ng-show="hasResultDetails()" class="action-button">
-                            Repeat again?
+                        <button ng-click="goStartPage()" ng-disabled="!hasResultDetails()" class="action-button">
+                            Repeat again
                         </button>
                     </fieldset>
 

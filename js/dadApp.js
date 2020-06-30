@@ -14,7 +14,7 @@ $app.controller('dadController', function($scope, $http, $window, $document) {
     //                          = 'https://explorer-1.us.digibyteservers.io/api/addr/%s/?noTxList=1'
     const PAYMENT_URL           = '/'
 
-    const LABEL                 = { NextBtn: 'Next', PrevBtn: 'Prev', RefreshBtn: 'Refresh' }
+    const LABEL                 = { NextBtn: 'Next', PrevBtn: 'Back', RefreshBtn: 'Refresh' }
     const ACTIONS               = { 2: 'pageConfirmation', 3: 'pageDeposit', 4: 'pageAction' }
     const FEE_PROCENTS          = 5
     const SATS_IN_DGB           = 100000000
