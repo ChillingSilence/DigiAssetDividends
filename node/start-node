@@ -1,5 +1,6 @@
 #!/bin/bash
 echo Starting: Node.js API
 
+cd /var/www/DigiAssetDividends/node
 node --abort-on-uncaught-exception ./app.js dad >> app.log &
 sleep 2

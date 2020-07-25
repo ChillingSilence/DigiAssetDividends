@@ -21,7 +21,7 @@ date >> $LOGFILE
 `curl --silent --output /dev/null "$URL"`
 if [ "$?" = "7" ]; then
     echo "running dad..." >> $LOGFILE
-    node --abort-on-uncaught-exception ./app.js dad >> $LOGFILE
+    node --abort-on-uncaught-exception ./app.js dad >> $LOGFILE &
     sleep 3
     exit 1
 fi
