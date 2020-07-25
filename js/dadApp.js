@@ -11,6 +11,7 @@ $app.controller('dadController', function($scope, $http, $window, $document) {
     const ASSET_INFO_URL        = 'https://api.digiassets.net/v3/assetmetadata/%s'
     const HOLDERS_URL           = 'https://api.digiassets.net/v3/stakeholders/%s'
     const BALANCE_URL           = 'https://explorerapi.digiassets.net/api/getaddressinfowithtransactions?address=%s'
+    const EXPLORER_URL		= 'https://digiexplorer.info/address/';
     //                          = 'https://explorer-1.us.digibyteservers.io/api/addr/%s/?noTxList=1'
     const PAYMENT_URL           = '/'
 
@@ -31,7 +32,7 @@ $app.controller('dadController', function($scope, $http, $window, $document) {
     $scope.resultDetails        = ''
     $scope.refreshInterval      = null
     $scope.depositQRraw         = ''
-
+    $scope.depositExplorerUrl	= ''
 
     /** Inline functions */
 
@@ -129,7 +130,8 @@ $app.controller('dadController', function($scope, $http, $window, $document) {
 
     $scope.pageDeposit = function() {
         $scope.nextEnabled = false
-        $scope.depositQRraw = DigiQR.request(userDepoAddress, 0, 320, 1)
+	$scope.depositExplorerUrl = EXPLORER_URL + userDepoAddress
+        $scope.depositQRraw = DigiQR.request(userDepoAddress, 0, 340, 5)
         $scope._startDepoRefreshInterval()
     }
 

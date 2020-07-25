@@ -94,7 +94,7 @@
                         </div>
 
                         <div class="success-info">
-                            <p>Balance: {{ balance }} DGB</p>
+                            <p><a href="{{depositExplorerUrl}}" target="__blank">Balance</a>: {{ balance }} DGB</p>
                             <p ng-show="getFee()">System fee: {{ getFee() }} DGB</p>
                             <p ng-show="getFee()">Will be payed: {{ getBalanceMinusFee() }} DGB</p>
                         </div>
