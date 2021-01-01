@@ -109,12 +109,12 @@ h3 {
     width: 25%;
     float: left;
     position: relative;
-    letter-spacing: 1px;
+    letter-spacing: 0;
     color: white;
     text-shadow: 0 0 10px black;
 }
 #progressbar li, .shadow {
-    text-shadow: 0 0 8px black, 0 0 12px black, 0 0 6px black
+    text-shadow: 0 0 6px black, 0 0 6px black, 0 0 6px black
 }
 
 #progressbar li:before {
@@ -160,7 +160,7 @@ h3 {
     color: white;
 }
 #progressbar li.active {
-    color: steelblue;
+    color: darkturquoise;
 }
 
 
@@ -271,6 +271,10 @@ form .action-button-previous:hover, form .action-button-previous:focus {
 .error-info p, .success-info p {
     font-size: 125%;
     margin: 0;
+}
+#confirmation-tab .asset-id {
+    font-size: 15px;
+    font-weight: bold;
 }
 
 /* Animation */

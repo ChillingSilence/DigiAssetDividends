@@ -2,12 +2,10 @@
 
 
 const { DGBfunds }  = require('./digibyte-funds')
-const dnode         = require('dnode')
-const usePort       = 60001
 
 
-class App {
-
+class App
+{
     constructor()
     {
         this.actions = {
@@ -84,8 +82,4 @@ class App {
     }
 }
 
-
-// Start service
-var app = new App()
-var node = dnode({ 'run': (json, cb) => app.controller(json, cb) })
-node.listen(usePort)
+exports.App = App

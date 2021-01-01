@@ -2,17 +2,19 @@ let $app = angular.module('dadApp', ['ngAnimate'])
 
 $app.filter('unsafe', ($sce) => $sce.trustAsHtml)
 
+$app.config(['$compileProvider', function ($compileProvider) {
+    $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|digibyte):/);
+}])
+
 $app.controller('dadController', function($scope, $http, $window, $document) {
 
     /** Consts */
 
-    // const DEFAULT_ASSET_ADDR    = 'La31NJknBQUe2JgsnZQneGd6Jm8PLX4L1yBhJC' // Chilling
-    const DEFAULT_ASSET_ADDR    = 'Ua5zQGwBVVWRRSeKxWbAPbFnxYsEBFMQByTXLP' 
+    const DEFAULT_ASSET_ADDR    = ''
+    const EXAMPLE_ASSET_ADDR	= 'Ua5zQGwBVVWRRSeKxWbAPbFnxYsEBFMQByTXLP'
     const ASSET_INFO_URL        = 'https://api.digiassets.net/v3/assetmetadata/%s'
     const HOLDERS_URL           = 'https://api.digiassets.net/v3/stakeholders/%s'
     const BALANCE_URL           = 'https://explorerapi.digiassets.net/api/getaddressinfowithtransactions?address=%s'
-    const EXPLORER_URL		= 'https://digiexplorer.info/address/';
-    //                          = 'https://explorer-1.us.digibyteservers.io/api/addr/%s/?noTxList=1'
     const PAYMENT_URL           = '/'
 
     const LABEL                 = { NextBtn: 'Next', PrevBtn: 'Back', RefreshBtn: 'Refresh' }
@@ -32,7 +34,6 @@ $app.controller('dadController', function($scope, $http, $window, $document) {
     $scope.resultDetails        = ''
     $scope.refreshInterval      = null
     $scope.depositQRraw         = ''
-    $scope.depositExplorerUrl	= ''
 
     /** Inline functions */
 
@@ -47,19 +48,17 @@ $app.controller('dadController', function($scope, $http, $window, $document) {
     $scope.getBalanceMinusFee   = () => $scope.balance - $scope.getFee()
     $scope.getLabel             = (name) => LABEL[name]
     $scope.getUserDepoAddress   = () => userDepoAddress
+    $scope.getUserDepoPrivKey   = () => userDepoPrivKey
 
 
     /* Init */
 
-    $scope.init = function() {
-        let showUserInterface = function() {
-            document.getElementById('loading').remove()
-            document.getElementsByTagName('html')[0].classList = []
-        }
-        showUserInterface()
+    $scope.init = function () {
+        document.getElementById('loading').remove()
+        document.getElementsByTagName('html')[0].classList = []
     }
 
-    $scope.changePage = function(page) {
+    $scope.changePage = function (page) {
         switch (page) {
             case '+1' : $scope.page ++; break
             case '-1' : $scope.page --; break
@@ -76,13 +75,17 @@ $app.controller('dadController', function($scope, $http, $window, $document) {
         }
     }
 
+    $scope.setDefaultAddress = function (page) {
+        $scope.assetAddress = EXAMPLE_ASSET_ADDR
+    }
+
 
     /** Page I */
 
 
     /** Page II */
 
-    $scope.pageConfirmation = function() {
+    $scope.pageConfirmation = function () {
         $scope.nextEnabled = false
         $scope.confirmDetails = ''
 
@@ -90,7 +93,7 @@ $app.controller('dadController', function($scope, $http, $window, $document) {
             $scope.nextEnabled = true
             $scope.confirmDetails = 
                 '<div class="success-info">'
-                + '<p>Asset ID: <b>'        + assetInfo.assetId             + "</b></p>"
+                + '<p>Asset ID: <span class="asset-id">' + assetInfo.assetId + "</span></p>"
                 + '<p>Holders count: <b>'   + assetInfo.numOfHolders        + "</b></p>"
                 + '<p>Total supply: '       + assetInfo.totalSupply         + "</p>"
                 + '<p>Aggregation policy: ' + assetInfo.aggregationPolicy   + "</p>"
@@ -117,12 +120,12 @@ $app.controller('dadController', function($scope, $http, $window, $document) {
     $scope._getAssetInfo = function(assetAddress, funcOnSuccess, funcOnError) {
         let onSuccess   = (info) => { funcOnSuccess(info) }
 
-		$.ajax({
-			url     : ASSET_INFO_URL.replace('%s', assetAddress),
-			dataType: 'json',
-			success : (response) => { response.assetId ? onSuccess(response) : funcOnError() },
+        $.ajax({
+            url     : ASSET_INFO_URL.replace('%s', assetAddress),
+            dataType: 'json',
+            success : (response) => { response.assetId ? onSuccess(response) : funcOnError() },
             error   : funcOnError
-		})
+        })
     }
 
 
@@ -130,7 +133,6 @@ $app.controller('dadController', function($scope, $http, $window, $document) {
 
     $scope.pageDeposit = function() {
         $scope.nextEnabled = false
-	$scope.depositExplorerUrl = EXPLORER_URL + userDepoAddress
         $scope.depositQRraw = DigiQR.request(userDepoAddress, 0, 340, 5)
         $scope._startDepoRefreshInterval()
     }
@@ -153,10 +155,10 @@ $app.controller('dadController', function($scope, $http, $window, $document) {
 
         $scope.nextEnabled = false
 
-		$.ajax({
-			url     : BALANCE_URL.replace('%s', userDepoAddress),
-			dataType: 'json',
-			success : (response) => {
+        $.ajax({
+            url     : BALANCE_URL.replace('%s', userDepoAddress),
+            dataType: 'json',
+            success : (response) => {
                 $scope.balance = response.balance / SATS_IN_DGB
 
                 if (response.balance) {
@@ -169,7 +171,11 @@ $app.controller('dadController', function($scope, $http, $window, $document) {
                     callback()
                 }
             }
-		})
+        })
+    }
+
+    $scope.depositExplorerUrl = function() {
+        return 'digibyte:' + $scope.getUserDepoAddress();
     }
 
 
@@ -203,12 +209,12 @@ $app.controller('dadController', function($scope, $http, $window, $document) {
     }
 
     $scope._getHoldersInfo = function(address, funcOnSuccess, funcOnError) {
-		$.ajax({
-			url     : HOLDERS_URL.replace('%s', address),
-			dataType: 'json',
-			success : (response) => { funcOnSuccess(response) },
+        $.ajax({
+            url     : HOLDERS_URL.replace('%s', address),
+            dataType: 'json',
+            success : (response) => { funcOnSuccess(response) },
             error   : funcOnError
-		})
+        })
     }
 
     $scope._getReceiversListByHoldersInfo = function(holdersInfo) {
@@ -246,5 +252,4 @@ $app.controller('dadController', function($scope, $http, $window, $document) {
             error   : funcOnError
         })
     }
-
 })

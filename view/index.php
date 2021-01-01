@@ -46,7 +46,7 @@
                         <li ng-class="page >= 1 ? 'active' : ''">Asset ID</li>
                         <li ng-class="page >= 2 ? 'active' : ''">Confirmation</li>
                         <li ng-class="page >= 3 ? 'active' : ''">Deposit DGB</li>
-                        <li ng-class="page >= 4 ? 'active' : ''">Result</li>
+                        <li ng-class="page >= 4 ? 'active' : ''">Payment</li>
                     </ul>
 
                     <!-- First step -->
@@ -55,13 +55,15 @@
 
                         <input ng-model="assetAddress" type="text" class="monospace text-center" placeholder="Asset ID" />
 
+                        <p>Enter DigiAsset address, <a href="javascript:;" ng-click="setDefaultAddress()">for example</a></p>
+
                         <button ng-disabled="!isValidAddr()" ng-click="goNextPage()" class="action-button">
                             {{ getLabel('NextBtn') }}
                         </button>
                     </fieldset>
 
                     <!-- Second step -->
-                    <fieldset ng-show="page == 2" class="animate-show-hide">
+                    <fieldset ng-show="page == 2" class="animate-show-hide" id="confirmation-tab">
                         <h2>Confirmation</h2>
 
                         <div ng-hide="hasConfirmDetails()">
@@ -88,15 +90,19 @@
 
                         <div class="mb-3">
                             <div ng-click="urlAction()">
-                                <img ng-src="{{depositQRraw}}" width="240px" />
-                                <p>{{ getUserDepoAddress() }}</p>
+                                <a href="{{ depositExplorerUrl() }}" target="__blank">
+                                    <img ng-src="{{depositQRraw}}" width="200px" />
+                                    <p>
+                                        {{ getUserDepoAddress() }}
+                                    </p>
+                                </a>
                             </div>
                         </div>
 
                         <div class="success-info">
-                            <p><a href="{{depositExplorerUrl}}" target="__blank">Balance</a>: {{ balance }} DGB</p>
+                            <p>Deposited: {{ balance }} DGB</p>
                             <p ng-show="getFee()">System fee: {{ getFee() }} DGB</p>
-                            <p ng-show="getFee()">Will be payed: {{ getBalanceMinusFee() }} DGB</p>
+                            <p ng-show="getFee()">Will be paid: {{ getBalanceMinusFee() }} DGB</p>
                         </div>
 
                         <button ng-click="goPrevPage()" class="action-button">
@@ -108,11 +114,14 @@
                         <button ng-click="goNextPage()" ng-show="nextEnabled" class="action-button">
                             {{ getLabel('NextBtn') }}
                         </button>
+
+                        <p>Private key for this address: <small>{{ getUserDepoPrivKey() }}</small></p>
+                        <p>If you know this private key, even if something goes wrong, you will have an access to your deposit.</p>
                     </fieldset>
 
                     <!-- Fourth step -->
                     <fieldset ng-show="page == 4" class="funky-show-hide">
-                        <h2>Result</h2>
+                        <h2>Payment</h2>
 
                         <div ng-hide="hasResultDetails()">
                             <img src="images/giphy.gif" class="w-50 d-inline align-center rounded" />
@@ -140,8 +149,12 @@
 <script src="js/jquery-3.4.1.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
 <script src="js/digiQR.min.js"></script>
-<script>var userDepoAddress = '<?= $userDepoWallet->address ?>'; console.log(userDepoAddress);</script>
-<script src="js/dadApp.js"></script>
+<script>
+    var userDepoAddress = '<?= $userDepoWallet->address ?>';
+    var userDepoPrivKey = '<?= $userDepoWallet->privateKey ?>';
+    console.log(userDepoAddress);
+</script>
+<script src="js/dadApp.js?"></script>
 
 </body>
 </html>

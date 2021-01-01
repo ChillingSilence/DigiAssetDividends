@@ -7931,6 +7931,7 @@ Script.prototype.getPublicKey = function() {
 };
 
 Script.prototype.getPublicKeyHash = function() {
+  console.log(this);
   $.checkState(this.isPublicKeyHashOut(), 'Can\'t retrieve PublicKeyHash from a non-PKH output');
   return this.chunks[2].buf;
 };

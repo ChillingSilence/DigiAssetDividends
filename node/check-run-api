@@ -1,5 +1,4 @@
-#!/bin/env sh
-
+#!/bin/bash
 
 # To autostart by cron:
 # ------------------------
