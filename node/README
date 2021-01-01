@@ -1,9 +1,8 @@
 
-Installation requirements
+Install dependencies
 =============================
 
-npm i digiassets-sdk
-npm i dnode
+`npm install`
 
 
 Run node

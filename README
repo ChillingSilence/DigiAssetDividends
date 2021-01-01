@@ -1,9 +1,12 @@
 Install Node.js and dependencies
 ================================================
 
-Get from https://nodejs.org/en/download/package-manager/
+Installation instructions at https://github.com/nodesource/distributions/blob/master/README.md
+For Ubuntu:
+`./install-node`
 
 To install dependencies:
+`apt install composer`
 `composer install`
 
 
