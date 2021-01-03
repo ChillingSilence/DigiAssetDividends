@@ -1,20 +1,23 @@
 Install Node.js and dependencies
 ================================================
 
-Installation instructions at https://github.com/nodesource/distributions/blob/master/README.md
-For Ubuntu:
-`./install-node`
-
 To install dependencies:
+
 `apt install composer`
 `composer install`
+
+Also from `node` folder (script tested on Ubuntu):
+
+`./install-node`
+
 
 
 Tune and run Node application
 ================================================
+
 Important backend part is a node application.
 
-1) You need to specify port to listing in `node/app.js`
+1) You need to specify port to listing in `node/app.js` and same at `config.php`
 
 2) There is a script to run process as a service
 To start: `./start-node`

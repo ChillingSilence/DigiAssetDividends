@@ -1,6 +1,6 @@
 
-const { App }  = require('./app')
-const dnode    = require('dnode')
+const { App }	= require('./app')
+const dnode	= require('dnode-weak-napi')
 
 // Start service
 var app = new App()

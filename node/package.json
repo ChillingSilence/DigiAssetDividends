@@ -17,7 +17,17 @@
   },
   "homepage": "https://github.com/ChillingSilence/DigiAssetDividends#readme",
   "dependencies": {
-    "digiassets-sdk": "^0.4.8",
-    "dnode": "^1.2.2"
+    "bcrypt": "^5.0.0",
+    "bindings": "^1.5.0",
+    "bitcoinjs-lib": "^5.2.0",
+    "digibyte": "^0.15.8",
+    "dnode-weak-napi": "^1.2.2",
+    "graceful": "^1.0.2",
+    "graceful-fs": "^4.2.4",
+    "libxmljs": "^0.11.1",
+    "make": "^0.8.1",
+    "node-gyp": "^7.1.2",
+    "tiny-secp256k1": "^1.1.6",
+    "weak-napi": "^1.0.1"
   }
 }

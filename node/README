@@ -2,7 +2,9 @@
 Install dependencies
 =============================
 
-`npm install`
+Need to install Node.js v12.x
+
+`./install-node`
 
 
 Run node
