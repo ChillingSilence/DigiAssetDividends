@@ -25,7 +25,6 @@
     "graceful": "^1.0.2",
     "graceful-fs": "^4.2.4",
     "libxmljs": "^0.11.1",
-    "make": "^0.8.1",
     "node-gyp": "^7.1.2",
     "tiny-secp256k1": "^1.1.6",
     "weak-napi": "^1.0.1"
