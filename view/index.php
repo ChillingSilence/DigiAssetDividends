@@ -18,8 +18,8 @@
     <link rel="stylesheet" href="css/styles.css">
 
 <?php if (TAG_GOOGLE_ANALYTICS) : ?>
-    <script async src="...<?= TAG_GOOGLE_ANALYTICS ?>"></script>
-    <script >window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);}
+    <script async type="text/javascript" src="...<?= TAG_GOOGLE_ANALYTICS ?>"></script>
+    <script type="text/javascript">window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date()); gtag('config', '<?= TAG_GOOGLE_ANALYTICS ?>');</script>
 <?php endif ?>
 </head>
@@ -148,17 +148,17 @@
 
 </div>
 
-<script src="js/angular.min.js" type="javascript"></script>
-<script src="js/angular-animate.min.js" type="javascript"></script>
-<script src="js/jquery-3.4.1.min.js" type="javascript"></script>
-<script src="js/bootstrap.min.js" type="javascript"></script>
-<script src="js/digiQR.min.js" type="javascript"></script>
-<script type="javascript">
+<script src="js/angular.min.js" type="text/javascript"></script>
+<script src="js/angular-animate.min.js" type="text/javascript"></script>
+<script src="js/jquery-3.4.1.min.js" type="text/javascript"></script>
+<script src="js/bootstrap.min.js" type="text/javascript"></script>
+<script src="js/digiQR.min.js" type="text/javascript"></script>
+<script type="text/javascript">
     const userDepositAddress = '<?= $userDepositWallet->address ?>';
     const userDepositPrivateKey = '<?= $userDepositWallet->privateKey ?>';
     console.log(userDepositAddress);
 </script>
-<script src="js/dadApp.js?" type="javascript"></script>
+<script src="js/dadApp.js?" type="text/javascript"></script>
 
 </body>
 </html>
