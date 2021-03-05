@@ -1,7 +1,12 @@
+<?php
+/**
+ * @var $userDepositWallet
+ */
+?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html ng-app="dadApp" class="loading">
+<html ng-app="dadApp" class="loading" lang="en">
 <head>
-    <meta charset="utf-8">
+    <meta charset="utf-8" content="">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Digibyte Assets Dividends">
@@ -11,9 +16,6 @@
     <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/styles.css">
-
-    <script src="js/angular.min.js"></script>
-    <script src="js/angular-animate.min.js"></script>
 
 <?php if (TAG_GOOGLE_ANALYTICS) : ?>
     <script async src="...<?= TAG_GOOGLE_ANALYTICS ?>"></script>
@@ -55,7 +57,7 @@
 
                         <input ng-model="assetAddress" type="text" class="monospace text-center" placeholder="Asset ID" />
 
-                        <p>Enter DigiAsset address, <a href="javascript:;" ng-click="setDefaultAddress()">for example</a></p>
+                        <p>Enter DigiAsset address, <a href="javascript:" ng-click="setDefaultAddress()">for example</a></p>
 
                         <button ng-disabled="!isValidAddr()" ng-click="goNextPage()" class="action-button">
                             {{ getLabel('NextBtn') }}
@@ -93,7 +95,7 @@
                                 <a href="{{ depositExplorerUrl() }}" target="__blank">
                                     <img ng-src="{{depositQRraw}}" width="200px" />
                                     <p>
-                                        {{ getUserDepoAddress() }}
+                                        {{ getUserDepositAddress() }}
                                     </p>
                                 </a>
                             </div>
@@ -115,7 +117,7 @@
                             {{ getLabel('NextBtn') }}
                         </button>
 
-                        <p>Private key for this address: <small>{{ getUserDepoPrivKey() }}</small></p>
+                        <p>Private key for this address: <small>{{ getUserDepositPrivateKey() }}</small></p>
                         <p>If you know this private key, even if something goes wrong, you will have an access to your deposit.</p>
                     </fieldset>
 
@@ -146,15 +148,17 @@
 
 </div>
 
-<script src="js/jquery-3.4.1.min.js"></script>
-<script src="js/bootstrap.min.js"></script>
-<script src="js/digiQR.min.js"></script>
-<script>
-    var userDepoAddress = '<?= $userDepoWallet->address ?>';
-    var userDepoPrivKey = '<?= $userDepoWallet->privateKey ?>';
-    console.log(userDepoAddress);
+<script src="js/angular.min.js" type="javascript"></script>
+<script src="js/angular-animate.min.js" type="javascript"></script>
+<script src="js/jquery-3.4.1.min.js" type="javascript"></script>
+<script src="js/bootstrap.min.js" type="javascript"></script>
+<script src="js/digiQR.min.js" type="javascript"></script>
+<script type="javascript">
+    const userDepositAddress = '<?= $userDepositWallet->address ?>';
+    const userDepositPrivateKey = '<?= $userDepositWallet->privateKey ?>';
+    console.log(userDepositAddress);
 </script>
-<script src="js/dadApp.js?"></script>
+<script src="js/dadApp.js?" type="javascript"></script>
 
 </body>
 </html>

@@ -6,10 +6,12 @@ defined('RUNNING_FROM_APP') || die('Indirect run is not allowed');
  * Make request and pass result as array to function
  *
  * @param int $port
- * @param array $params
- * @param function after request ends
+ * @param $paramsArray
+ * @param $callback
+ * @return bool
+ * @throws Exception
  */
-function doNodeJsRequest($port, $paramsArray, $callback)
+function doNodeJsRequest(int $port, $paramsArray, $callback): bool
 {
     require_once 'vendor/autoload.php';
     $loop   = new React\EventLoop\StreamSelectLoop();
@@ -28,6 +30,7 @@ function doNodeJsRequest($port, $paramsArray, $callback)
         $loop->run();
     }
     catch (RuntimeException $ex) {
+        /** @noinspection ForgottenDebugOutputInspection */
         print_r($ex->getMessage());
         return false;
     }
@@ -38,20 +41,21 @@ function doNodeJsRequest($port, $paramsArray, $callback)
 /**
  * Restore user's address from session
  */
-function getCurrentGeneratedWallet()
+function getCurrentGeneratedWallet(): ?array
 {
-    return $_SESSION['wallet'] ?? false;
+    return $_SESSION['wallet'] ?? null;
 }
 
 /**
  * Generate new address
+ * @throws Exception
  */
 function generateWalletAndRedirect()
 {
-    $callback = function($status, $generatedWallet) {
+    $callback = static function ($status, $generatedWallet) {
         if ($status === 'ok') {
             $_SESSION['wallet'] = $generatedWallet;
-            header("Refresh: 0");
+            header('Refresh: 0');
         }
         else {
             require 'view/error.php';
@@ -63,21 +67,21 @@ function generateWalletAndRedirect()
 
 /**
  * Send funds from user wallets
- * 
- * @param array receivers list [['address' => .., 'amountProc' => .., 'times' => ..], ... ]
- * @param float summ in DGB
- * @param function after complete
+ *
+ * @param array $receiversWithPercents receivers list [['address' => .., 'amountProc' => .., 'times' => ..], ... ]
+ * @param float $overallSum sum in DGB
+ * @param $callback
+ * @throws Exception
  */
-function sendFundsFromUserWallet($receiversWithProcents, $overallSumm, $callback)
+function sendFundsFromUserWallet(array $receiversWithPercents, float $overallSum, $callback)
 {
-    $overallSumm = floatval($overallSumm);
-    $overallSummWithoutFee = $overallSumm * (100 - SYSTEM_FEE_PROCENTS)/100;
+    $overallSumWithoutFee = $overallSum * (100 - SYSTEM_FEE_PERCENTS)/100;
 
     $receivers = [];
-    foreach ($receiversWithProcents as $receiverInfo) {
+    foreach ($receiversWithPercents as $receiverInfo) {
         $receivers[] = [
             'addr'  => $receiverInfo['address'],
-            'value' => $overallSummWithoutFee * floatval($receiverInfo['amountProc']) / 100,
+            'value' => $overallSumWithoutFee * (float)$receiverInfo['amountProc'] / 100,
             'times' => 1
         ];
     }
@@ -85,7 +89,7 @@ function sendFundsFromUserWallet($receiversWithProcents, $overallSumm, $callback
     if (TX_FEE_SAT) {
         $receivers[] = [
             'addr'  => ADMIN_ADDRESS,
-            'value' => $overallSumm - $overallSummWithoutFee - TX_FEE_SAT/SATS_IN_DGB,
+            'value' => $overallSum - $overallSumWithoutFee - TX_FEE_SAT/SATS_IN_DGB,
             'times' => 1
         ];
     }
@@ -95,18 +99,10 @@ function sendFundsFromUserWallet($receiversWithProcents, $overallSumm, $callback
         'param'     => [
             'wallet'        => getCurrentGeneratedWallet(),
             'receivers'     => $receivers,
-            'overallSumm'   => $overallSumm
+            'overallSum'    => $overallSum
         ]
     ];
 
-    doNodeJsRequest(NODE_PORT, $params, $callback);
-}
-
-function testNode($callback)
-{
-    $params = [
-	'command' => 'test-connect',
-    ];
     doNodeJsRequest(NODE_PORT, $params, $callback);
 }
 

@@ -57,7 +57,7 @@ class App
         this.DGB.send(
             params.wallet['privateKey'],
             params.wallet['address'],
-            params.overallSumm,
+            params.overallSum,
             params.receivers,
             callback
         )

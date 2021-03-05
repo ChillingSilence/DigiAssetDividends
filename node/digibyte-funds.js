@@ -5,9 +5,8 @@
  */
 
 
-const DigiByte  = require("digibyte")
-const Request   = require("request")
-const bitcoinjs = require("bitcoinjs-lib")
+const DigiByte  = require('digibyte');
+const Request   = require('request');
 
 
 class DGBfunds
@@ -17,11 +16,11 @@ class DGBfunds
      */
     constructor()
     {
-        this.EXPLORER_URL   = "https://explorer-1.us.digibyteservers.io"
+        this.EXPLORER_URL   = 'https://explorer-1.us.digibyteservers.io';
         // this.EXPLORER_URL   = 'https://insight.digibyte.host'
 
-        this.TX_FEE_SAT     = 20000
-        this.SATS_IN_DGB    = 100000000
+        this.TX_FEE_SAT     = 20000;
+        this.SATS_IN_DGB    = 100000000;
 
         // Legacy
         this.DIGIBYTE_NETWORK = {
@@ -56,17 +55,17 @@ class DGBfunds
      *
      * @param sourcePrivateKeyWIF 
      * @param sourceAddress
-     * @param overallSumm like 100
+     * @param overallSum like 100
      * @param operations [ {addr, times, value}, ... ]
      * @param cb callback function after operation
      */
-    send(sourcePrivateKeyWIF, sourceAddress, overallSumm, operations, cb)
+    send(sourcePrivateKeyWIF, sourceAddress, overallSum, operations, cb)
     {
-        var _this = this
+        let _this = this;
 
         return new Promise((resolve, reject) => {
             this._getUnspentTransactionOutput(sourceAddress).then(utxos => {
-                if (utxos.length == 0) {
+                if (utxos.length === 0) {
                     reject({
                         "result"    : "error",
                         "message"   : "The source address has no unspent transactions"
@@ -78,7 +77,7 @@ class DGBfunds
                 let transaction         = new DigiByte.Transaction()
                 let sourcePrivateKey    = DigiByte.PrivateKey.fromWIF(sourcePrivateKeyWIF)
                 let signAddress         = sourcePrivateKeyWIF
-                let balanceLeft         = overallSumm
+                let balanceLeft         = overallSum
                 let error               = null
 
                 transaction.from(utxos)
@@ -128,7 +127,7 @@ class DGBfunds
                             "source_address"        : sourceAddress,
                             "change_private_key"    : changePrivateKey.toWIF(),
                             "change_address"        : changeAddress,
-                            "sent_amount"           : overallSumm
+                            "sent_amount"           : overallSum
                         }
 
                         console.log('sent transaction', info);
@@ -159,10 +158,11 @@ class DGBfunds
      * Get UXTO of wallet
      *
      * @param address wallet address
+     * @param cb
      */
     _getUnspentTransactionOutput(address, cb=false)
     {
-        var _this = this
+        let _this = this
 
         return new Promise((resolve, reject) => {
             let addressUtxosUrl = _this.EXPLORER_URL + "/api/addr/" + address + "/utxo"
@@ -185,10 +185,11 @@ class DGBfunds
      * Send tx
      *
      * @param transaction transaction to send
+     * @param cb
      */
     _sendTransaction(transaction, cb=false)
     {
-        var _this = this
+        let _this = this
 
         return new Promise((resolve, reject) => {
             Request.post({
@@ -211,18 +212,12 @@ class DGBfunds
      * Reject or callback with params
      *
      * @param body query response
-     * @param error error message
      * @param callback function to run after
-     * @param modificator data modificator, if needed
      */
-    _answerToQuery(body, callback=false, modificator=false)
+    _answerToQuery(body, callback= false)
     {
         console.log('_answer', body)
         let parsedBody = JSON.parse(body)
-        if (modificator === 'first') {
-            parsedBody = parsedBody[0]
-        }
-
         if (callback) {
             callback(parsedBody)
         }

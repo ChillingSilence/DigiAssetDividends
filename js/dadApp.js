@@ -6,11 +6,12 @@ $app.config(['$compileProvider', function ($compileProvider) {
     $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|digibyte):/);
 }])
 
-$app.controller('dadController', function($scope, $http, $window, $document) {
+$app.controller('dadController', function($scope) {
 
-    /** Consts */
+    /** Constants */
 
     const DEFAULT_ASSET_ADDR    = ''
+    // noinspection SpellCheckingInspection
     const EXAMPLE_ASSET_ADDR	= 'Ua5zQGwBVVWRRSeKxWbAPbFnxYsEBFMQByTXLP'
     const ASSET_INFO_URL        = 'https://api.digiassets.net/v3/assetmetadata/%s'
     const HOLDERS_URL           = 'https://api.digiassets.net/v3/stakeholders/%s'
@@ -19,7 +20,7 @@ $app.controller('dadController', function($scope, $http, $window, $document) {
 
     const LABEL                 = { NextBtn: 'Next', PrevBtn: 'Back', RefreshBtn: 'Refresh' }
     const ACTIONS               = { 2: 'pageConfirmation', 3: 'pageDeposit', 4: 'pageAction' }
-    const FEE_PROCENTS          = 5
+    const FEE_PERCENTS          = 5
     const SATS_IN_DGB           = 100000000
 
 
@@ -41,21 +42,22 @@ $app.controller('dadController', function($scope, $http, $window, $document) {
     $scope.goPrevPage           = () => $scope.changePage('-1')
     $scope.refreshPage          = () => $scope.changePage('')
     $scope.goNextPage           = () => $scope.changePage('+1')
-    $scope.hasConfirmDetails    = () => $scope.confirmDetails != ''
-    $scope.hasResultDetails     = () => $scope.resultDetails != ''
-    $scope.isValidAddr          = () => $scope.assetAddress.length == 38
-    $scope.getFee               = () => $scope.balance * FEE_PROCENTS / 100
+    $scope.hasConfirmDetails    = () => $scope.confirmDetails !== ''
+    $scope.hasResultDetails     = () => $scope.resultDetails !== ''
+    $scope.isValidAddr          = () => $scope.assetAddress.length === 38
+    $scope.getFee               = () => $scope.balance * FEE_PERCENTS / 100
     $scope.getBalanceMinusFee   = () => $scope.balance - $scope.getFee()
     $scope.getLabel             = (name) => LABEL[name]
-    $scope.getUserDepoAddress   = () => userDepoAddress
-    $scope.getUserDepoPrivKey   = () => userDepoPrivKey
+    $scope.getUserDepositAddress   = () => userDepositAddress
+    $scope.getUserDepositPrivateKey = () => userDepositPrivateKey
 
 
     /* Init */
 
     $scope.init = function () {
-        document.getElementById('loading').remove()
-        document.getElementsByTagName('html')[0].classList = []
+        document.getElementById('loading').remove();
+        let element = document.getElementsByTagName('html')[0];
+        element.classList.remove(...element.classList);
     }
 
     $scope.changePage = function (page) {
@@ -75,7 +77,7 @@ $app.controller('dadController', function($scope, $http, $window, $document) {
         }
     }
 
-    $scope.setDefaultAddress = function (page) {
+    $scope.setDefaultAddress = function () {
         $scope.assetAddress = EXAMPLE_ASSET_ADDR
     }
 
@@ -86,11 +88,11 @@ $app.controller('dadController', function($scope, $http, $window, $document) {
     /** Page II */
 
     $scope.pageConfirmation = function () {
-        $scope.nextEnabled = false
-        $scope.confirmDetails = ''
+        $scope.nextEnabled = false;
+        $scope.confirmDetails = '';
 
         let onSuccess = (assetInfo) => {
-            $scope.nextEnabled = true
+            $scope.nextEnabled = true;
             $scope.confirmDetails = 
                 '<div class="success-info">'
                 + '<p>Asset ID: <span class="asset-id">' + assetInfo.assetId + "</span></p>"
@@ -98,26 +100,22 @@ $app.controller('dadController', function($scope, $http, $window, $document) {
                 + '<p>Total supply: '       + assetInfo.totalSupply         + "</p>"
                 + '<p>Aggregation policy: ' + assetInfo.aggregationPolicy   + "</p>"
                 + '<p>Locked: '             + assetInfo.lockStatus          + "</p>"
-                + '</div>'
-            $scope.balance = 0
-            $scope.$apply()
+                + '</div>';
+            $scope.balance = 0;
+            $scope.$apply();
         }
 
         let onError = function() {
-            $scope.nextEnabled = false
-            $scope.refreshEnabled = true
-            $scope.confirmDetails = '<div class="error-info"><p>Failed. Check address or retry</p></div>'
-            $scope.$apply()
+            $scope.nextEnabled = false;
+            $scope.refreshEnabled = true;
+            $scope.confirmDetails = '<div class="error-info"><p>Failed. Check address or retry</p></div>';
+            $scope.$apply();
         }
 
-        $scope._getAssetInfo(
-            $scope.assetAddress,
-            onSuccess,
-            onError
-        )
+        $scope._getAssetInfo($scope.assetAddress, onSuccess, onError);
     }
 
-    $scope._getAssetInfo = function(assetAddress, funcOnSuccess, funcOnError) {
+    $scope._getAssetInfo = function (assetAddress, funcOnSuccess, funcOnError) {
         let onSuccess   = (info) => { funcOnSuccess(info) }
 
         $.ajax({
@@ -133,11 +131,11 @@ $app.controller('dadController', function($scope, $http, $window, $document) {
 
     $scope.pageDeposit = function() {
         $scope.nextEnabled = false
-        $scope.depositQRraw = DigiQR.request(userDepoAddress, 0, 340, 5)
-        $scope._startDepoRefreshInterval()
+        $scope.depositQRraw = DigiQR.request(userDepositAddress, 0, 340, 5)
+        $scope._startDepositRefreshInterval()
     }
 
-    $scope._startDepoRefreshInterval = function() {
+    $scope._startDepositRefreshInterval = function() {
         $scope._refreshInterval = setInterval($scope._checkBalance, 10000)
         $scope._checkBalance()
     }
@@ -149,14 +147,14 @@ $app.controller('dadController', function($scope, $http, $window, $document) {
     }
 
     $scope._checkBalance = function(callback) {
-        if (!userDepoAddress) {
+        if (!userDepositAddress) {
             return
         }
 
         $scope.nextEnabled = false
 
         $.ajax({
-            url     : BALANCE_URL.replace('%s', userDepoAddress),
+            url     : BALANCE_URL.replace('%s', userDepositAddress),
             dataType: 'json',
             success : (response) => {
                 $scope.balance = response.balance / SATS_IN_DGB
@@ -175,24 +173,24 @@ $app.controller('dadController', function($scope, $http, $window, $document) {
     }
 
     $scope.depositExplorerUrl = function() {
-        return 'digibyte:' + $scope.getUserDepoAddress();
+        return 'digibyte:' + $scope.getUserDepositAddress();
     }
 
 
     /* Page IV */
 
     $scope.pageAction = function() {
-        $scope.resultDetails = ''
+        $scope.resultDetails = '';
 
         let onPaymentSuccess = (info) => {
-            $scope.resultDetails = '<div class="success-info">' + info + '</div>'
-            $scope.refreshEnabled = false
-            $scope.$apply()
+            $scope.resultDetails = '<div class="success-info">' + info + '</div>';
+            $scope.refreshEnabled = false;
+            $scope.$apply();
         }
-        let onError = onPaymentError = () => {
-            $scope.resultDetails = '<div class="error-info"><p>Payment failed.</p></div>'
-            $scope.refreshEnabled = true
-            $scope.$apply()
+        let onPaymentError = () => {
+            $scope.resultDetails = '<div class="error-info"><p>Payment failed.</p></div>';
+            $scope.refreshEnabled = true;
+            $scope.$apply();
         }
 
         $scope._getHoldersInfo(
@@ -204,7 +202,7 @@ $app.controller('dadController', function($scope, $http, $window, $document) {
                     onPaymentError
                 )
             },
-            onError
+            onPaymentError
         );
     }
 
@@ -235,7 +233,7 @@ $app.controller('dadController', function($scope, $http, $window, $document) {
         return receiversList
     }
 
-    $scope._postPayment = (receiversInProcents, funcOnSuccess, funcOnError) => {
+    $scope._postPayment = (receiversInPercents, funcOnSuccess, funcOnError) => {
         let userWalletBalance = $scope.balance
         if (!userWalletBalance) {
             return funcOnError()
@@ -245,8 +243,8 @@ $app.controller('dadController', function($scope, $http, $window, $document) {
             url     : PAYMENT_URL,
             data    : {
                 'action'                : 'send-funds',
-                'overallSumm'           : userWalletBalance,
-                'receiversInProcents'   : receiversInProcents
+                'overallSum'            : userWalletBalance,
+                'receiversInPercents'   : receiversInPercents
             },
             success : (response) => { funcOnSuccess(response) },
             error   : funcOnError

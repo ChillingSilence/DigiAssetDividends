@@ -27,4 +27,4 @@ Tune Config.php
 ================================================
 Copy `config.example.php` to `config.php` and tune
 
-1) You should specify same port as at the node app, admin address, fee in procents
+1) You should specify same port as at the node app, admin address, fee in percents

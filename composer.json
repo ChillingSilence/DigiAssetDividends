@@ -2,6 +2,7 @@
     "require": {
         "react/event-loop": "*",
         "react/socket": "*",
-	"dnode/dnode": "*"
+	    "dnode/dnode": "*",
+        "ext-json": "*"
     }
 }

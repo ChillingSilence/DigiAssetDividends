@@ -1,14 +1,19 @@
 <?php
 defined('RUNNING_FROM_APP') || die('Indirect run is not allowed');
 
-$functionOutput = function($status, $result) {
+/**
+ * @var $receiversInPercents
+ * @var $overallSum
+ */
+
+$functionOutput = static function ($status, $result) {
     jsonOutput([
         'status' => $status,
         'result' => $result
-        ]);
+    ]);
 };
 
-$requiredParams = ['receiversInProcents', 'overallSumm'];
+$requiredParams = ['receiversInPercents', 'overallSum'];
 foreach ($requiredParams as $param) {
     $$param = $_POST[$param] ?? false;
     if (!$$param) {
@@ -16,4 +21,8 @@ foreach ($requiredParams as $param) {
     }
 }
 
-sendFundsFromUserWallet($receiversInProcents, $overallSumm, $functionOutput);
+try {
+    sendFundsFromUserWallet($receiversInPercents, $overallSum, $functionOutput);
+} catch (Exception $e) {
+    return $functionOutput('error', 'Error on send funds');
+}
