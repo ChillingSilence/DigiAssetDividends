@@ -33,7 +33,6 @@
 </div>
 <div ng-controller="dadController" ng-init="init()" ng-cloak>
 
-
     <header>
         <h1 class="shadow">DigiAsset Dividends</h1>
     </header>
@@ -154,8 +153,8 @@
 <script src="js/bootstrap.min.js" type="text/javascript"></script>
 <script src="js/digiQR.min.js" type="text/javascript"></script>
 <script type="text/javascript">
-    const userDepositAddress = '<?= $userDepositWallet->address ?>';
-    const userDepositPrivateKey = '<?= $userDepositWallet->privateKey ?>';
+    const userDepositAddress = '<?= $userDepositWallet['address'] ?>';
+    const userDepositPrivateKey = '<?= $userDepositWallet['privateKey'] ?>';
     console.log(userDepositAddress);
 </script>
 <script src="js/dadApp.js?" type="text/javascript"></script>
