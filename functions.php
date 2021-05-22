@@ -11,23 +11,20 @@ defined('RUNNING_FROM_APP') || die('Indirect run is not allowed');
  * @return bool
  * @throws Exception
  */
-function doNodeJsRequest(int $port, $paramsArray, $callback): bool
+function doNodeJsRequest(int $port, $command, $paramsArray, $callback): bool
 {
-    require_once 'vendor/autoload.php';
-    $loop   = new React\EventLoop\StreamSelectLoop();
-    $dnode  = new DNode\DNode($loop);
-
     try {
-        $dnode->connect($port, function($remote, $connection) use($paramsArray, $callback) {
-            $doAfterRequest = function($answerCode, $answer) use($connection, $callback) {
-                $callback($answerCode, $answer);
-                $connection->end();
-            };
+        $connection = curl_init("http://localhost:$port/$command");
+        curl_setopt($connection, CURLOPT_POST, 1);
+        curl_setopt($connection, CURLOPT_POSTFIELDS, http_build_query($paramsArray));
+        curl_setopt($connection, CURLOPT_RETURNTRANSFER, true);
 
-            $remote->run(json_encode($paramsArray), $doAfterRequest);
-        });
+        $apiResponse = curl_exec($connection);
+        $answerCode = curl_getinfo($connection,CURLINFO_HTTP_CODE);
+        curl_close($connection);
+        $jsonArrayResponse = json_decode($apiResponse, true);
 
-        $loop->run();
+        $callback($answerCode, $jsonArrayResponse);
     }
     catch (RuntimeException $ex) {
         /** @noinspection ForgottenDebugOutputInspection */
@@ -53,7 +50,7 @@ function getCurrentGeneratedWallet(): ?array
 function generateWalletAndRedirect()
 {
     $callback = static function ($status, $generatedWallet) {
-        if ($status === 'ok') {
+        if ($status === 200) {
             $_SESSION['wallet'] = $generatedWallet;
             header('Refresh: 0');
         }
@@ -62,7 +59,7 @@ function generateWalletAndRedirect()
         }
     };
 
-    doNodeJsRequest(NODE_PORT, ['command' => 'generate-address'], $callback);
+    doNodeJsRequest(NODE_PORT, 'generate-wallet', [], $callback);
 }
 
 /**
@@ -87,23 +84,21 @@ function sendFundsFromUserWallet(array $receiversWithPercents, float $overallSum
     }
 
     if (TX_FEE_SAT) {
-        $operations[] = [
-            'addr'  => ADMIN_ADDRESS,
-            'value' => $overallSum - $overallSumWithoutFee - TX_FEE_SAT/SATS_IN_DGB,
-            'times' => 1
-        ];
+        $toAdmin = $overallSum * SYSTEM_FEE_PERCENTS / 100 - TX_FEE_SAT/SATS_IN_DGB;
+        if ($toAdmin > 0) {
+            $operations[] = [
+                'addr'  => ADMIN_ADDRESS,
+                'value' => $toAdmin,
+                'times' => 1
+            ];
+        }
     }
 
-    $params = [
-        'command'   => 'send-funds', 
-        'param'     => [
-            'wallet'        => getCurrentGeneratedWallet(),
-            'operations'    => $operations,
-            'overallSum'    => $overallSum
-        ]
-    ];
+    $params = getCurrentGeneratedWallet();
+    $params['operations'] = $operations;
+    $params['overallSum'] = $overallSum;
 
-    doNodeJsRequest(NODE_PORT, $params, $callback);
+    doNodeJsRequest(NODE_PORT, 'send-funds', $params, $callback);
 }
 
 /**
