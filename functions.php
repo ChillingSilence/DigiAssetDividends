@@ -6,10 +6,10 @@ defined('RUNNING_FROM_APP') || die('Indirect run is not allowed');
  * Make request and pass result as array to function
  *
  * @param int $port
+ * @param $command
  * @param $paramsArray
  * @param $callback
  * @return bool
- * @throws Exception
  */
 function doNodeJsRequest(int $port, $command, $paramsArray, $callback): bool
 {
@@ -83,12 +83,12 @@ function sendFundsFromUserWallet(array $receiversWithPercents, float $overallSum
         ];
     }
 
-    if (TX_FEE_SAT) {
-        $toAdmin = $overallSum * SYSTEM_FEE_PERCENTS / 100 - TX_FEE_SAT/SATS_IN_DGB;
-        if ($toAdmin > 0) {
+    if (SYSTEM_FEE_PERCENTS) {
+        $toAdminFee = $overallSum * SYSTEM_FEE_PERCENTS / 100 - TX_FEE_SAT/SATS_IN_DGB;
+        if ($toAdminFee > 0) {
             $operations[] = [
                 'addr'  => ADMIN_ADDRESS,
-                'value' => $toAdmin,
+                'value' => $toAdminFee,
                 'times' => 1
             ];
         }
