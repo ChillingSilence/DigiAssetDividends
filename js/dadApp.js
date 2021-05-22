@@ -253,7 +253,7 @@ $app.controller('dadController', function($scope) {
             },
             success : (response) => {
                 let responseJson = JSON.parse(response)
-                if (responseJson.status === 200) {
+                if (responseJson.status === 200 && !responseJson.error) {
                     funcOnSuccess(responseJson)
                 } else {
                     funcOnError(responseJson)
