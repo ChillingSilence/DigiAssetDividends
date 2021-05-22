@@ -50,6 +50,7 @@ $app.controller('dadController', function($scope) {
     $scope.getLabel             = (name) => LABEL[name]
     $scope.getUserDepositAddress   = () => userDepositAddress
     $scope.getUserDepositPrivateKey = () => userDepositPrivateKey
+    $scope.getSentAmount        = () => ($scope.resultDetails['sent_amount'] / SATS_IN_DGB) + ' DGB'
 
 
     /* Init */
@@ -183,12 +184,12 @@ $app.controller('dadController', function($scope) {
         $scope.resultDetails = '';
 
         let onPaymentSuccess = (info) => {
-            $scope.resultDetails = '<div class="success-info">' + info + '</div>';
+            $scope.resultDetails = info['result'];
             $scope.refreshEnabled = false;
             $scope.$apply();
         }
         let onPaymentError = () => {
-            $scope.resultDetails = '<div class="error-info"><p>Payment failed.</p></div>';
+            $scope.resultDetails = false;
             $scope.refreshEnabled = true;
             $scope.$apply();
         }
@@ -246,7 +247,13 @@ $app.controller('dadController', function($scope) {
                 'overallSum'            : userWalletBalance,
                 'receiversInPercents'   : receiversInPercents
             },
-            success : (response) => { funcOnSuccess(response) },
+            success : (response) => {
+                if (response.status === 200) {
+                    funcOnSuccess(response)
+                } else {
+                    funcOnError(response)
+                }
+            },
             error   : funcOnError
         })
     }

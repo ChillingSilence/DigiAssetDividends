@@ -27,7 +27,7 @@
 <div id="loading">
 
 
-    <img src="images/giphy.gif" />
+    <img src="images/giphy.gif"  alt="Please wait..."/>
 
 
 </div>
@@ -68,7 +68,7 @@
                         <h2>Confirmation</h2>
 
                         <div ng-hide="hasConfirmDetails()">
-                            <img src="images/giphy.gif" class="w-50 d-inline align-center rounded" />
+                            <img src="images/giphy.gif" class="w-50 d-inline align-center rounded"  alt="Please wait..."/>
                         </div>
                         <div ng-show="hasConfirmDetails()">
                             <div ng-bind-html="confirmDetails | unsafe"></div>
@@ -128,7 +128,14 @@
                             <img src="images/giphy.gif" class="w-50 d-inline align-center rounded" />
                         </div>
                         <div ng-show="hasResultDetails()">
-                            <div ng-bind-html="resultDetails | unsafe"></div>
+                            <div ng-if="!resultDetails">
+                                <div class="error-info"><p>Payment failed.</p></div>
+                            </div>
+                            <div ng-if="resultDetails">
+                                <p>Sent amount: {{ getSentAmount() }}</p>
+
+                                <a href="https://chainz.cryptoid.info/dgb/tx.dws?{{ resultDetails['result'] }}.htm">Transaction</a>
+                            </div>
                         </div>
 
                         <button ng-click="refreshPage()" ng-show="refreshEnabled" class="action-button">
