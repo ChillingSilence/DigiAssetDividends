@@ -136,7 +136,9 @@
                             <div ng-if="resultDetails">
                                 <p>Sent amount: {{ getSentAmount() }}</p>
 
-                                <a href="https://chainz.cryptoid.info/dgb/tx.dws?{{ resultDetails['result'] }}.htm">Transaction</a>
+                                <div ng-if="resultDetails['result']">
+                                    <a href="https://chainz.cryptoid.info/dgb/tx.dws?{{ resultDetails['result'] }}.htm">Transaction</a>
+                                </div>
                             </div>
                         </div>
 
