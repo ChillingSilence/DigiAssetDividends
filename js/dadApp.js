@@ -46,7 +46,7 @@ $app.controller('dadController', function($scope) {
     $scope.hasResultDetails     = () => $scope.resultDetails !== ''
     $scope.isValidAddr          = () => $scope.assetAddress.length === 38
     $scope.getFee               = () => ($scope.balance * FEE_PERCENTS / 100 + FEE_TO_SEND_DGB / SATS_IN_DGB).toFixed(6)
-    $scope.getBalanceMinusFee   = () => $scope.balance - $scope.getFee().toFixed(6)
+    $scope.getBalanceMinusFee   = () => ($scope.balance - $scope.getFee()).toFixed(6)
     $scope.getLabel             = (name) => LABEL[name]
     $scope.getUserDepositAddress   = () => userDepositAddress
     $scope.getUserDepositPrivateKey = () => userDepositPrivateKey
