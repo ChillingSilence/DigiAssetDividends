@@ -130,6 +130,7 @@
                         <div ng-show="hasResultDetails()">
                             <div ng-if="!resultDetails">
                                 <div class="error-info"><p>Payment failed.</p></div>
+                                <p>Your deposit private key with funds: {{ getUserDepositPrivateKey() }}</p>
                             </div>
                             <div ng-if="resultDetails">
                                 <p>Sent amount: {{ getSentAmount() }}</p>
