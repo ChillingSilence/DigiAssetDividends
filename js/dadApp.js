@@ -33,6 +33,7 @@ $app.controller('dadController', function($scope) {
     $scope.nextEnabled          = false
     $scope.confirmDetails       = ''
     $scope.resultDetails        = ''
+    $scope.resultError          = ''
     $scope.refreshInterval      = null
     $scope.depositQRraw         = ''
 
@@ -182,14 +183,16 @@ $app.controller('dadController', function($scope) {
 
     $scope.pageAction = function() {
         $scope.resultDetails = '';
+        $scope.resultError = '';
 
         let onPaymentSuccess = (info) => {
             $scope.resultDetails = info['result'];
             $scope.refreshEnabled = false;
             $scope.$apply();
         }
-        let onPaymentError = () => {
+        let onPaymentError = (info) => {
             $scope.resultDetails = false;
+            $scope.resultError = info['error'];
             $scope.refreshEnabled = true;
             $scope.$apply();
         }
