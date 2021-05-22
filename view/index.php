@@ -103,7 +103,7 @@
                         <div class="success-info">
                             <p>Deposited: {{ balance }} DGB</p>
                             <p ng-show="getFee()">System fee: {{ getFee() }} DGB</p>
-                            <p ng-show="getFee()">Will be paid: {{ getBalanceMinusFee() }} DGB</p>
+                            <p ng-show="getBalanceMinusFee()">Will be paid: {{ getBalanceMinusFee() }} DGB</p>
                         </div>
 
                         <button ng-click="goPrevPage()" class="action-button">
