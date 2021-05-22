@@ -6,25 +6,11 @@ To install dependencies:
 `apt install composer`
 `composer install`
 
-Also from `node` folder (script tested on Ubuntu):
-
-`./install-node`
-
-
-
-Tune and run Node application
-================================================
-
-Important backend part is a node application.
-
-1) You need to specify port to listing in `node/app.js` and same at `config.php`
-
-2) There is a script to run process as a service
-To start: `./start-node`
+Need to install, configure and run as a service [digibyte-nownode](https://github.com/cept73/digibyte-nownode)
 
 
 Tune Config.php
 ================================================
 Copy `config.example.php` to `config.php` and tune
 
-1) You should specify same port as at the node app, admin address, fee in percents
+You should specify same port as at the digibyte-nownode app, admin address, fee in percents

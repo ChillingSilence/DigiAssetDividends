@@ -77,9 +77,9 @@ function sendFundsFromUserWallet(array $receiversWithPercents, float $overallSum
 {
     $overallSumWithoutFee = $overallSum * (100 - SYSTEM_FEE_PERCENTS)/100;
 
-    $receivers = [];
+    $operations = [];
     foreach ($receiversWithPercents as $receiverInfo) {
-        $receivers[] = [
+        $operations[] = [
             'addr'  => $receiverInfo['address'],
             'value' => $overallSumWithoutFee * (float)$receiverInfo['amountProc'] / 100,
             'times' => 1
@@ -87,7 +87,7 @@ function sendFundsFromUserWallet(array $receiversWithPercents, float $overallSum
     }
 
     if (TX_FEE_SAT) {
-        $receivers[] = [
+        $operations[] = [
             'addr'  => ADMIN_ADDRESS,
             'value' => $overallSum - $overallSumWithoutFee - TX_FEE_SAT/SATS_IN_DGB,
             'times' => 1
@@ -98,7 +98,7 @@ function sendFundsFromUserWallet(array $receiversWithPercents, float $overallSum
         'command'   => 'send-funds', 
         'param'     => [
             'wallet'        => getCurrentGeneratedWallet(),
-            'receivers'     => $receivers,
+            'operations'    => $operations,
             'overallSum'    => $overallSum
         ]
     ];
