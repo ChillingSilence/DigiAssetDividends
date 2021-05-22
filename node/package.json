@@ -21,6 +21,7 @@
     "bindings": "^1.5.0",
     "bitcoinjs-lib": "^5.2.0",
     "digibyte": "^0.15.8",
+    "dnode": "^1.2.2",
     "dnode-weak-napi": "^1.2.2",
     "graceful": "^1.0.2",
     "graceful-fs": "^4.2.4",
