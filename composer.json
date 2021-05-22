@@ -4,7 +4,6 @@
     "require": {
         "react/event-loop": "*",
         "react/socket": "*",
-	    "dnode/dnode": "*",
         "ext-json": "*",
         "ext-curl": "*"
     },
