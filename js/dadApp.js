@@ -218,12 +218,13 @@ $app.controller('dadController', function($scope) {
 
     $scope._getReceiversListByHoldersInfo = function(holdersInfo) {
         let overallAmount = 0
-        holdersInfo.holders.forEach((holder) => {
+        let holders = holdersInfo['holders']
+        let receiversList = []
+
+        holders.forEach((holder) => {
             overallAmount += parseFloat(holder.amount)
         })
-
-        let receiversList = []
-        holdersInfo.holders.forEach((holder) => {
+        holders.forEach((holder) => {
             let amountProc = parseFloat(holder.amount) / overallAmount * 100
             receiversList.push({
                 'address'   : holder.address,
@@ -248,13 +249,17 @@ $app.controller('dadController', function($scope) {
                 'receiversInPercents'   : receiversInPercents
             },
             success : (response) => {
-                if (response.status === 200) {
-                    funcOnSuccess(response)
+                let responseJson = JSON.parse(response)
+                if (responseJson.status === 200) {
+                    funcOnSuccess(responseJson)
                 } else {
-                    funcOnError(response)
+                    funcOnError(responseJson)
                 }
             },
-            error   : funcOnError
+            error   : (response) => {
+                let responseJson = JSON.parse(response)
+                funcOnError(responseJson)
+            }
         })
     }
 })
