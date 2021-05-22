@@ -72,7 +72,7 @@ function generateWalletAndRedirect()
  */
 function sendFundsFromUserWallet(array $receiversWithPercents, float $overallSum, $callback)
 {
-    $overallSumWithoutFee = $overallSum * (100 - SYSTEM_FEE_PERCENTS)/100;
+    $overallSumWithoutFee = $overallSum * (100 - SYSTEM_FEE_PERCENTS)/100 - TX_FEE_SAT/SATS_IN_DGB;
 
     $operations = [];
     foreach ($receiversWithPercents as $receiverInfo) {
@@ -83,15 +83,13 @@ function sendFundsFromUserWallet(array $receiversWithPercents, float $overallSum
         ];
     }
 
-    $toAdminFee = $overallSum * SYSTEM_FEE_PERCENTS / 100 - TX_FEE_SAT/SATS_IN_DGB;
+    $toAdminFee = $overallSum * SYSTEM_FEE_PERCENTS / 100;
     if ($toAdminFee > 0) {
         $operations[] = [
             'addr'  => ADMIN_ADDRESS,
             'value' => $toAdminFee,
             'times' => 1
         ];
-    } else {
-        print '!!! No system fee';
     }
 
     $params = getCurrentGeneratedWallet();
