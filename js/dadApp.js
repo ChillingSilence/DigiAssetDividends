@@ -192,7 +192,9 @@ $app.controller('dadController', function($scope) {
         }
         let onPaymentError = (info) => {
             $scope.resultDetails = false;
-            $scope.resultError = info['error'];
+            if (info['result']) {
+                $scope.resultError = info['result']['error'];
+            }
             $scope.refreshEnabled = true;
             $scope.$apply();
         }
@@ -253,7 +255,7 @@ $app.controller('dadController', function($scope) {
             },
             success : (response) => {
                 let responseJson = JSON.parse(response)
-                if (responseJson.status === 200 && !responseJson.error) {
+                if (responseJson.status === 200 && !responseJson.result.error) {
                     funcOnSuccess(responseJson)
                 } else {
                     funcOnError(responseJson)
