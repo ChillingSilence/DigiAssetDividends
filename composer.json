@@ -1,8 +1,14 @@
 {
+    "name": "cept73/digiassetdividends",
+    "description": "Pay dividends to asset holders",
     "require": {
         "react/event-loop": "*",
         "react/socket": "*",
 	    "dnode/dnode": "*",
-        "ext-json": "*"
+        "ext-json": "*",
+        "ext-curl": "*"
+    },
+    "require-dev": {
+        "roave/security-advisories": "dev-latest"
     }
 }
