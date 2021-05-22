@@ -22,7 +22,7 @@ $app.controller('dadController', function($scope) {
     const ACTIONS               = { 2: 'pageConfirmation', 3: 'pageDeposit', 4: 'pageAction' }
     const FEE_PERCENTS          = 5
     const SATS_IN_DGB           = 100000000
-
+    const FEE_TO_SEND_DGB       = 0.00005 * SATS_IN_DGB
 
     /** Variables */
 
@@ -45,7 +45,7 @@ $app.controller('dadController', function($scope) {
     $scope.hasConfirmDetails    = () => $scope.confirmDetails !== ''
     $scope.hasResultDetails     = () => $scope.resultDetails !== ''
     $scope.isValidAddr          = () => $scope.assetAddress.length === 38
-    $scope.getFee               = () => ($scope.balance * FEE_PERCENTS / 100).toFixed(5)
+    $scope.getFee               = () => ($scope.balance * FEE_PERCENTS / 100 + FEE_TO_SEND_DGB).toFixed(5)
     $scope.getBalanceMinusFee   = () => $scope.balance - $scope.getFee()
     $scope.getLabel             = (name) => LABEL[name]
     $scope.getUserDepositAddress   = () => userDepositAddress
